@@ -13,10 +13,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 
@@ -29,6 +27,11 @@ public class VoladroidDisplay {
 		shell.setText(title);
 		shell.setLayout(new GridLayout(2, false));
 
+		Button open = new Button(shell, SWT.PUSH);
+		open.setText("Open Dialog");
+		Button close = new Button(shell, SWT.PUSH);
+		close.setText("Close");
+		
 		final List list = new List(shell, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 		GridData d = new GridData();
 		d.horizontalSpan = 2;
@@ -47,8 +50,6 @@ public class VoladroidDisplay {
 			}
 		});
 
-		Button open = new Button(shell, SWT.PUSH);
-		open.setText("Open Dialog");
 		open.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog fd = new FileDialog(shell, SWT.OPEN);
