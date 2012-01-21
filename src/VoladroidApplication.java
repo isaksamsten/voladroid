@@ -1,22 +1,14 @@
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.mat.SnapshotException;
-import org.eclipse.mat.report.Spec;
-import org.eclipse.mat.snapshot.ISnapshot;
-import org.eclipse.mat.snapshot.SnapshotFactory;
-import org.eclipse.mat.snapshot.SnapshotFormat;
-import org.eclipse.mat.snapshot.model.IClass;
-import org.eclipse.mat.util.ConsoleProgressListener;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import com.voladroid.ui.VoladroidDisplay;
+import com.voladroid.ui.VoladroidMain;
 
 /**
  * This class controls all aspects of the application's execution
@@ -32,15 +24,26 @@ public class VoladroidApplication implements IApplication {
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		Display display = Display.getDefault();
-		Shell shell = new VoladroidDisplay().start(display);
+		Shell shell = new Shell(display);
+		VoladroidMain inst = new VoladroidMain(shell, SWT.NULL);
+		Point size = inst.getSize();
+		shell.setLayout(new FillLayout());
+		shell.layout();
+		if(size.x == 0 && size.y == 0) {
+			inst.pack();
+			shell.pack();
+		} else {
+			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
+			shell.setSize(shellBounds.width, shellBounds.height);
+		}
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-		display.dispose();
-				return IApplication.EXIT_OK;
+		return IApplication.EXIT_OK;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

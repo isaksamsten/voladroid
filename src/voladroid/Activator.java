@@ -3,6 +3,8 @@ package voladroid;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+import com.voladroid.model.adb.DebugBridge;
+
 public class Activator implements BundleActivator {
 
 	/*
@@ -19,6 +21,7 @@ public class Activator implements BundleActivator {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		System.out.println("Goodbye World!!");
+		DebugBridge.getInstance().terminate();
 	}
 
 }

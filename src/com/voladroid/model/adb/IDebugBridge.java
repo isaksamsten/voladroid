@@ -1,11 +1,22 @@
 package com.voladroid.model.adb;
 
-import com.android.ddmlib.AndroidDebugBridge.IDeviceChangeListener;
-import com.android.ddmlib.IDevice;
+import java.util.List;
 
 public interface IDebugBridge {
-	
-	void addDeviceListener(IDeviceChangeListener l);
-	IDevice[] getDevices();
+
+	List<Device> getDevices();
+
 	void terminate();
+
+	public abstract boolean restart();
+
+	public abstract boolean isConnected();
+
+	public abstract boolean hasInitialDeviceList();
+
+	public abstract int getRestartAttemptCount();
+
+	public abstract int getConnectionAttemptCount();
+
+	void add(DebugBridgeListener l);
 }

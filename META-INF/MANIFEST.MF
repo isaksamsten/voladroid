@@ -4,7 +4,9 @@ Bundle-Name: Voladroid
 Bundle-SymbolicName: voladroid;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .,
- bin
+ bin,
+ lib/ddmlib-r13.jar,
+ lib/commons-io-2.1.jar
 Bundle-Activator: voladroid.Activator
 Export-Package: voladroid
 Require-Bundle: org.eclipse.core.runtime,
