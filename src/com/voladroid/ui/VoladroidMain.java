@@ -1,6 +1,8 @@
 package com.voladroid.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -8,20 +10,20 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 import com.cloudgarden.resource.SWTResourceManager;
-
+import com.voladroid.model.Project;
+import com.voladroid.service.ProjectListener;
+import com.voladroid.service.Services;
 
 /**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
+ * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
+ * Builder, which is free for non-commercial use. If Jigloo is being used
+ * commercially (ie, by a corporation, company or business for any purpose
+ * whatever) then you should purchase a license for each developer using Jigloo.
+ * Please visit www.cloudgarden.com for details. Use of Jigloo implies
+ * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
+ * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
+ * ANY CORPORATE OR COMMERCIAL PURPOSE.
+ */
 public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 
 	private Menu menu1;
@@ -33,25 +35,44 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 	private MenuItem exitMenuItem;
 	private MenuItem closeFileMenuItem;
 	private MenuItem saveFileMenuItem;
-	private MenuItem newFileMenuItem;
-	private MenuItem openFileMenuItem;
+	private MenuItem projectFileMenuItem;
 	private Menu fileMenu;
 	private MenuItem fileMenuItem;
 
 	{
-		//Register as a resource user - SWTResourceManager will
-		//handle the obtaining and disposing of resources
+		// Register as a resource user - SWTResourceManager will
+		// handle the obtaining and disposing of resources
 		SWTResourceManager.registerResourceUser(this);
 	}
 
 	public VoladroidMain(Composite parent, int style) {
 		super(parent, style);
 		initGUI();
+
+		Services.getEnvironment().addProjectEvent(new ProjectListener() {
+
+			@Override
+			public void projectRemoved(Project project) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void projectAdded(Project project) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void defaultProject(Project p) {
+				getShell().setText(p.getName());
+			}
+		});
 	}
-	
+
 	/**
-	* Initializes the GUI.
-	*/
+	 * Initializes the GUI.
+	 */
 	private void initGUI() {
 		try {
 			this.setSize(540, 300);
@@ -67,9 +88,12 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 				GridData processList1LData = new GridData();
 				processList1LData.verticalAlignment = GridData.FILL;
 				processList1LData.grabExcessVerticalSpace = true;
-				processList1LData.horizontalAlignment = GridData.FILL;
-				processList1LData.minimumWidth = 300;
+				processList1LData.minimumWidth = 500;
+				processList1LData.widthHint = 255;
 				processList1 = new ProcessList(this, SWT.NONE);
+				GridLayout processList1Layout = new GridLayout();
+				processList1Layout.horizontalSpacing = 0;
+				processList1.setLayout(processList1Layout);
 				processList1.setLayoutData(processList1LData);
 			}
 			{
@@ -81,19 +105,25 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 					{
 						fileMenu = new Menu(fileMenuItem);
 						{
-							openFileMenuItem = new MenuItem(fileMenu, SWT.CASCADE);
-							openFileMenuItem.setText("Open");
+							projectFileMenuItem = new MenuItem(fileMenu,
+									SWT.CASCADE);
+							projectFileMenuItem.setText("Projects");
+							projectFileMenuItem
+									.addSelectionListener(new SelectionAdapter() {
+										public void widgetSelected(
+												SelectionEvent evt) {
+											projectFileMenuItemWidgetSelected(evt);
+										}
+									});
 						}
 						{
-							newFileMenuItem = new MenuItem(fileMenu, SWT.CASCADE);
-							newFileMenuItem.setText("New");
-						}
-						{
-							saveFileMenuItem = new MenuItem(fileMenu, SWT.CASCADE);
+							saveFileMenuItem = new MenuItem(fileMenu,
+									SWT.CASCADE);
 							saveFileMenuItem.setText("Save");
 						}
 						{
-							closeFileMenuItem = new MenuItem(fileMenu, SWT.CASCADE);
+							closeFileMenuItem = new MenuItem(fileMenu,
+									SWT.CASCADE);
 							closeFileMenuItem.setText("Close");
 						}
 						{
@@ -109,7 +139,8 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 					{
 						helpMenu = new Menu(helpMenuItem);
 						{
-							contentsMenuItem = new MenuItem(helpMenu, SWT.CASCADE);
+							contentsMenuItem = new MenuItem(helpMenu,
+									SWT.CASCADE);
 							contentsMenuItem.setText("Contents");
 						}
 						{
@@ -124,5 +155,10 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void projectFileMenuItemWidgetSelected(SelectionEvent evt) {
+		ProjectDialog d = new ProjectDialog(getShell(), SWT.NONE);
+		d.open();
 	}
 }

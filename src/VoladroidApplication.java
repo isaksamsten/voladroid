@@ -7,7 +7,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import com.voladroid.ui.VoladroidDisplay;
 import com.voladroid.ui.VoladroidMain;
 
 /**
@@ -29,7 +28,7 @@ public class VoladroidApplication implements IApplication {
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
 		shell.layout();
-		if(size.x == 0 && size.y == 0) {
+		if (size.x == 0 && size.y == 0) {
 			inst.pack();
 			shell.pack();
 		} else {

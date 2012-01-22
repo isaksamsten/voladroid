@@ -18,14 +18,18 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import com.voladroid.model.Project;
 import com.voladroid.model.adb.DebugBridge;
 import com.voladroid.model.adb.DebugBridgeAdapter;
 import com.voladroid.model.adb.Device;
 import com.voladroid.model.adb.Process;
+import com.voladroid.service.ProjectListener;
+import com.voladroid.service.Services;
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
@@ -49,6 +53,8 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 	private boolean deviceConnected = false;
 	private Device device = null;
 
+	private boolean hasProject = false;
+
 	/**
 	 * Auto-generated main method to display this
 	 * org.eclipse.swt.widgets.Composite inside a new Shell.
@@ -65,26 +71,38 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 		super(parent, style);
 		initGUI();
 
+		Services.getEnvironment().addProjectEvent(new ProjectListener() {
+
+			@Override
+			public void projectRemoved(Project project) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void projectAdded(Project project) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void defaultProject(Project p) {
+				hasProject = true;
+				dump.setEnabled(hasProject);
+			}
+		});
+
 		DebugBridge.getInstance().add(new DebugBridgeAdapter() {
 
 			@Override
-			public void hprofDump(Process p, final byte[] data) {
-				getDisplay().asyncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
-						String path = dialog.open();
-						try {
-							FileUtils
-									.writeByteArrayToFile(new File(path), data);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				});
-
+			public void hprofDump(final Process p, final byte[] data) {
+				try {
+					Services.getEnvironment().getCurrentProject().save(p, data);
+				} catch (IOException e) {
+					MessageBox box = new MessageBox(getShell(), SWT.OK);
+					box.setMessage(e.getMessage());
+					box.open();
+				}
 				System.out.println(p + " dumped");
 
 			}
@@ -144,6 +162,7 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 				}
 				{
 					dump = new Button(composite1, SWT.PUSH | SWT.CENTER);
+					dump.setEnabled(hasProject);
 					RowData dumpLData = new RowData();
 					dump.setLayoutData(dumpLData);
 					dump.setText("Dump memory");
