@@ -1,32 +1,19 @@
 package com.voladroid.ui;
 
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableEditor;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
-
 import com.voladroid.model.Project;
 import com.voladroid.service.ProjectListener;
 import com.voladroid.service.Services;
@@ -64,7 +51,7 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 	public ProjectDialog(Shell parent, int style) {
 		super(parent, style);
 
-		Services.getEnvironment().addProjectEvent(new ProjectListener() {
+		Services.getEnvironment().addProjectListener(new ProjectListener() {
 
 			@Override
 			public void projectRemoved(Project project) {
@@ -77,7 +64,7 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 			}
 
 			@Override
-			public void defaultProject(Project p) {
+			public void currentProject(Project p) {
 				// TODO Auto-generated method stub
 
 			}
@@ -135,6 +122,7 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 					projectNewBtn.setLayoutData(projectNewBtnLData);
 					projectNewBtn.setText("New project");
 					projectNewBtn.addSelectionListener(new SelectionAdapter() {
+						@Override
 						public void widgetSelected(SelectionEvent evt) {
 							projectNewBtnWidgetSelected(evt);
 						}
@@ -163,6 +151,7 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 				cancel.setLayoutData(cancelLData);
 				cancel.setText("Cancel");
 				cancel.addSelectionListener(new SelectionAdapter() {
+					@Override
 					public void widgetSelected(SelectionEvent evt) {
 						cancelWidgetSelected(evt);
 					}
@@ -189,6 +178,7 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 				rmProject.setLayoutData(rmProjectLData);
 				rmProject.setText("Delete Project");
 				rmProject.addSelectionListener(new SelectionAdapter() {
+					@Override
 					public void widgetSelected(SelectionEvent evt) {
 						rmProjectWidgetSelected(evt);
 					}
@@ -204,6 +194,7 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 				loadProject.setLayoutData(loadProjectLData);
 				loadProject.setText("Load Project");
 				loadProject.addSelectionListener(new SelectionAdapter() {
+					@Override
 					public void widgetSelected(SelectionEvent evt) {
 						loadProjectWidgetSelected(evt);
 					}
@@ -251,10 +242,10 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 	private void projectNewBtnWidgetSelected(SelectionEvent evt) {
 		String name = projectNameTxt.getText();
 		if (name != null && !name.trim().equals("")) {
-			Services.getEnvironment().addProject(name);
+			Services.getEnvironment().createProject(name);
 		}
 
 		projectNameTxt.setText("");
-		loadProject.setFocus();
+		// loadProject.setFocus();
 	}
 }

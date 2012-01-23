@@ -6,7 +6,7 @@ import java.util.EventListener;
 
 public interface ProjectListener extends EventListener {
 
-	void defaultProject(Project p);
+	void currentProject(Project p);
 
 	void projectRemoved(Project project);
 

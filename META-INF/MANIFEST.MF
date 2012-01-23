@@ -6,7 +6,11 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .,
  bin,
  lib/ddmlib-r13.jar,
- lib/commons-io-2.1.jar
+ lib/commons-io-2.1.jar,
+ lib/commons-configuration-1.7.jar,
+ lib/commons-lang-2.6.jar,
+ lib/commons-collections-3.2.1.jar,
+ lib/commons-logging-1.1.1.jar
 Bundle-Activator: voladroid.Activator
 Export-Package: voladroid
 Require-Bundle: org.eclipse.core.runtime,

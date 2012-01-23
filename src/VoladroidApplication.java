@@ -50,6 +50,6 @@ public class VoladroidApplication implements IApplication {
 	 */
 	@Override
 	public void stop() {
-		// nothing to do
+
 	}
 }

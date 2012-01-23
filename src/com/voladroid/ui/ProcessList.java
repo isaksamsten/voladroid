@@ -1,9 +1,7 @@
 package com.voladroid.ui;
 
-import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -17,7 +15,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -64,6 +61,7 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 	 * Overriding checkSubclass allows this class to extend
 	 * org.eclipse.swt.widgets.Composite
 	 */
+	@Override
 	protected void checkSubclass() {
 	}
 
@@ -71,7 +69,7 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 		super(parent, style);
 		initGUI();
 
-		Services.getEnvironment().addProjectEvent(new ProjectListener() {
+		Services.getEnvironment().addProjectListener(new ProjectListener() {
 
 			@Override
 			public void projectRemoved(Project project) {
@@ -86,7 +84,7 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 			}
 
 			@Override
-			public void defaultProject(Project p) {
+			public void currentProject(Project p) {
 				hasProject = true;
 				dump.setEnabled(hasProject);
 			}
@@ -98,10 +96,19 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 			public void hprofDump(final Process p, final byte[] data) {
 				try {
 					Services.getEnvironment().getCurrentProject().save(p, data);
-				} catch (IOException e) {
-					MessageBox box = new MessageBox(getShell(), SWT.OK);
-					box.setMessage(e.getMessage());
-					box.open();
+				} catch (final IOException e) {
+					e.printStackTrace();
+
+					getDisplay().asyncExec(new Runnable() {
+
+						@Override
+						public void run() {
+							MessageBox box = new MessageBox(getShell(), SWT.OK);
+							box.setMessage(e.getMessage());
+							box.open();
+						}
+					});
+
 				}
 				System.out.println(p + " dumped");
 
@@ -155,6 +162,7 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 					refresh.setLayoutData(button1LData);
 					refresh.setText("Refresh");
 					refresh.addSelectionListener(new SelectionAdapter() {
+						@Override
 						public void widgetSelected(SelectionEvent evt) {
 							refreshWidgetSelected(evt);
 						}
@@ -167,6 +175,7 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 					dump.setLayoutData(dumpLData);
 					dump.setText("Dump memory");
 					dump.addSelectionListener(new SelectionAdapter() {
+						@Override
 						public void widgetSelected(SelectionEvent evt) {
 							dumpWidgetSelected(evt);
 						}

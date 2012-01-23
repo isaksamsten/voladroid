@@ -3,7 +3,6 @@ package com.voladroid.model.adb;
 import java.util.List;
 
 import com.android.ddmlib.FileListingService;
-import com.voladroid.service.ConfigService;
 
 public class Test {
 	private static Device device = null;
@@ -43,7 +42,7 @@ public class Test {
 			@Override
 			public void hprofDump(Process p, byte[] data) {
 				System.out.println(p + " hprof dumped to " + data.length);
-				
+
 			}
 		});
 
@@ -66,7 +65,7 @@ public class Test {
 
 			Thread.sleep(1000);
 		}
-		
+
 		adb.terminate();
 
 	}

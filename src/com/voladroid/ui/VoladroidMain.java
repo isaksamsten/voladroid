@@ -49,7 +49,7 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 		super(parent, style);
 		initGUI();
 
-		Services.getEnvironment().addProjectEvent(new ProjectListener() {
+		Services.getEnvironment().addProjectListener(new ProjectListener() {
 
 			@Override
 			public void projectRemoved(Project project) {
@@ -64,7 +64,7 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 			}
 
 			@Override
-			public void defaultProject(Project p) {
+			public void currentProject(Project p) {
 				getShell().setText(p.getName());
 			}
 		});
@@ -110,6 +110,7 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 							projectFileMenuItem.setText("Projects");
 							projectFileMenuItem
 									.addSelectionListener(new SelectionAdapter() {
+										@Override
 										public void widgetSelected(
 												SelectionEvent evt) {
 											projectFileMenuItemWidgetSelected(evt);
