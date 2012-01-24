@@ -1,6 +1,7 @@
 package com.voladroid.service;
 
 import com.voladroid.model.Config;
+import com.voladroid.model.Workspace;
 
 /**
  * Configuring the workspace
@@ -13,7 +14,7 @@ public class ConfigService {
 	private Config config;
 
 	ConfigService() {
-		config = Services.getEnvironment().getWorkspace().getConfig();
+		config = Workspace.getWorkspace().getConfig();
 	}
 
 	public String getAdbPath() {

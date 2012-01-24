@@ -3,8 +3,12 @@ package com.voladroid.model;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.mat.SnapshotException;
+import org.eclipse.mat.snapshot.ISnapshot;
+import org.eclipse.mat.snapshot.SnapshotFactory;
+import org.eclipse.mat.util.IProgressListener;
 
-public class Dump {
+public class Dump implements Comparable<Dump> {
 	private Project project;
 	private String name;
 
@@ -24,6 +28,23 @@ public class Dump {
 	public File getLocation() {
 		return FileUtils.getFile(project.getDumpLocation(), getName()
 				+ ".hprof");
+	}
+
+	/**
+	 * Return a snapshot
+	 * 
+	 * @param listener
+	 * @return {@link ISnapshot}
+	 * @throws SnapshotException
+	 */
+	public ISnapshot getSnapshot(IProgressListener listener)
+			throws SnapshotException {
+		return SnapshotFactory.openSnapshot(getLocation(), listener);
+	}
+
+	@Override
+	public int compareTo(Dump o) {
+		return getName().compareTo(o.getName());
 	}
 
 }

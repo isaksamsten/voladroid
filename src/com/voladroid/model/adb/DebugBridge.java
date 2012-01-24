@@ -67,7 +67,7 @@ public class DebugBridge implements IDebugBridge {
 
 			@Override
 			public void onSuccess(byte[] file, Client c) {
-				DebugBridge.this.fireDump(file, c);
+				DebugBridge.this.fireDump(Hprof.convert(file), c);
 
 			}
 

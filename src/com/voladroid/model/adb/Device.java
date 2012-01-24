@@ -70,7 +70,6 @@ public class Device {
 		RawImage img = device.getScreenshot();
 		PaletteData pdata = new PaletteData(img.getRedMask(),
 				img.getGreenMask(), img.getBlueMask());
-		System.out.println(img.width + " " + img.height);
 		ImageData imgData = new ImageData(img.width, img.height, img.bpp,
 				pdata, 1, img.data);
 

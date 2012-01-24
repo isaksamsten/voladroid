@@ -1,18 +1,15 @@
 package com.voladroid.ui;
 
-import java.io.IOException;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -21,12 +18,12 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.voladroid.model.Project;
+import com.voladroid.model.Workspace;
 import com.voladroid.model.adb.DebugBridge;
 import com.voladroid.model.adb.DebugBridgeAdapter;
 import com.voladroid.model.adb.Device;
 import com.voladroid.model.adb.Process;
 import com.voladroid.service.ProjectListener;
-import com.voladroid.service.Services;
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
@@ -39,10 +36,11 @@ import com.voladroid.service.Services;
  * ANY CORPORATE OR COMMERCIAL PURPOSE.
  */
 public class ProcessList extends org.eclipse.swt.widgets.Composite {
+	private static final Log log = LogFactory.getLog(ProcessList.class);
+
 	private Composite composite1;
 	private Table table1;
 	private Button dump;
-	private Canvas canvas1;
 	private TableColumn name;
 	private TableColumn pid;
 	private Button refresh;
@@ -69,7 +67,7 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 		super(parent, style);
 		initGUI();
 
-		Services.getEnvironment().addProjectListener(new ProjectListener() {
+		Workspace.getWorkspace().addProjectListener(new ProjectListener() {
 
 			@Override
 			public void projectRemoved(Project project) {
@@ -88,6 +86,12 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 				hasProject = true;
 				dump.setEnabled(hasProject);
 			}
+
+			@Override
+			public void projectChange(Project project) {
+				// TODO Auto-generated method stub
+
+			}
 		});
 
 		DebugBridge.getInstance().add(new DebugBridgeAdapter() {
@@ -95,9 +99,9 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 			@Override
 			public void hprofDump(final Process p, final byte[] data) {
 				try {
-					Services.getEnvironment().getCurrentProject().save(p, data);
-				} catch (final IOException e) {
-					e.printStackTrace();
+					Workspace.getWorkspace().getCurrentProject().save(p, data);
+				} catch (final Exception e) {
+					log.error(e.getMessage(), e);
 
 					getDisplay().asyncExec(new Runnable() {
 
@@ -110,8 +114,7 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 					});
 
 				}
-				System.out.println(p + " dumped");
-
+				log.info(String.format("%s dumped.", p.toString()));
 			}
 
 			@Override
@@ -124,19 +127,24 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 			public void deviceConnected(Device d) {
 				deviceConnected = true;
 				device = d;
+
 				Display.getDefault().asyncExec(new Runnable() {
 
 					@Override
 					public void run() {
 						try {
-							ImageData data = device.getScreenshot();
-							Image img = new Image(Display.getDefault(), data);
+							// ImageData data = device.getScreenshot();
+							// Image img = new Image(Display.getDefault(),
+							// data);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 
 					}
 				});
+
+				log.info(String.format("Device: %s connected",
+						d.getSerialNumber()));
 			}
 		});
 	}
@@ -191,6 +199,11 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 				table1 = new Table(this, SWT.NONE);
 				table1.setLayoutData(table1LData);
 				table1.setHeaderVisible(true);
+				table1.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent evt) {
+						table1WidgetSelected(evt);
+					}
+				});
 				{
 					pid = new TableColumn(table1, SWT.NONE);
 					pid.setText("Pid");
@@ -223,8 +236,14 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 	private void dumpWidgetSelected(SelectionEvent evt) {
 		String pid = table1.getSelection()[0].getText(1);
 		Process process = device.getProcess(pid);
-		if (process.isValid())
+		if (process.isValid()) {
 			process.dumpHprof();
+		}
+	}
+
+	private void table1WidgetSelected(SelectionEvent evt) {
+		if (hasProject)
+			dump.setEnabled(true);
 	}
 
 }

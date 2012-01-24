@@ -5,12 +5,15 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 import com.cloudgarden.resource.SWTResourceManager;
+import com.voladroid.model.Dump;
 import com.voladroid.model.Project;
+import com.voladroid.model.Workspace;
 import com.voladroid.service.ProjectListener;
 import com.voladroid.service.Services;
 
@@ -31,6 +34,7 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 	private MenuItem contentsMenuItem;
 	private Menu helpMenu;
 	private MenuItem helpMenuItem;
+	private ClassBrowser classBrowser1;
 	private ProcessList processList1;
 	private MenuItem exitMenuItem;
 	private MenuItem closeFileMenuItem;
@@ -49,7 +53,7 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 		super(parent, style);
 		initGUI();
 
-		Services.getEnvironment().addProjectListener(new ProjectListener() {
+		Workspace.getWorkspace().addProjectListener(new ProjectListener() {
 
 			@Override
 			public void projectRemoved(Project project) {
@@ -66,6 +70,18 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 			@Override
 			public void currentProject(Project p) {
 				getShell().setText(p.getName());
+				// for(Dump d : p.getDumps()) {
+				// combo1.add(d.getName());
+				// }
+
+			}
+
+			@Override
+			public void projectChange(Project p) {
+				getShell().setText(p.getName());
+				// for(Dump d : p.getDumps()) {
+				// combo1.add(d.getName());
+				// }
 			}
 		});
 	}
@@ -78,7 +94,6 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 			this.setSize(540, 300);
 			this.setBackground(SWTResourceManager.getColor(192, 192, 192));
 			GridLayout thisLayout = new GridLayout();
-			thisLayout.makeColumnsEqualWidth = true;
 			thisLayout.numColumns = 2;
 			thisLayout.horizontalSpacing = 0;
 			thisLayout.marginHeight = 0;
@@ -95,6 +110,15 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 				processList1Layout.horizontalSpacing = 0;
 				processList1.setLayout(processList1Layout);
 				processList1.setLayoutData(processList1LData);
+			}
+			{
+				GridData classBrowser1LData = new GridData();
+				classBrowser1LData.grabExcessHorizontalSpace = true;
+				classBrowser1LData.grabExcessVerticalSpace = true;
+				classBrowser1LData.verticalAlignment = GridData.FILL;
+				classBrowser1LData.horizontalAlignment = GridData.FILL;
+				classBrowser1 = new ClassBrowser(this, SWT.NONE);
+				classBrowser1.setLayoutData(classBrowser1LData);
 			}
 			{
 				menu1 = new Menu(getShell(), SWT.BAR);

@@ -12,9 +12,12 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import com.voladroid.model.Project;
+import com.voladroid.model.Workspace;
 import com.voladroid.service.ProjectListener;
 import com.voladroid.service.Services;
 
@@ -43,6 +46,31 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 
 	private Project selectedProject;
 
+	private ProjectListener listener = new ProjectListener() {
+
+		@Override
+		public void projectRemoved(Project project) {
+			projectList.remove(project.getName());
+		}
+
+		@Override
+		public void projectAdded(Project project) {
+			projectList.add(project.getName());
+		}
+
+		@Override
+		public void currentProject(Project p) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void projectChange(Project project) {
+			// TODO Auto-generated method stub
+
+		}
+	};
+
 	/**
 	 * Auto-generated main method to display this org.eclipse.swt.widgets.Dialog
 	 * inside a new Shell.
@@ -51,24 +79,7 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 	public ProjectDialog(Shell parent, int style) {
 		super(parent, style);
 
-		Services.getEnvironment().addProjectListener(new ProjectListener() {
-
-			@Override
-			public void projectRemoved(Project project) {
-				projectList.remove(project.getName());
-			}
-
-			@Override
-			public void projectAdded(Project project) {
-				projectList.add(project.getName());
-			}
-
-			@Override
-			public void currentProject(Project p) {
-				// TODO Auto-generated method stub
-
-			}
-		});
+		Workspace.getWorkspace().addProjectListener(listener);
 	}
 
 	public void open() {
@@ -82,6 +93,11 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 			dialogShell.pack();
 			dialogShell.setSize(283, 364);
 			dialogShell.setText("Project workspace");
+			dialogShell.addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent evt) {
+					dialogShellWidgetDisposed(evt);
+				}
+			});
 			{
 				group1 = new Group(dialogShell, SWT.NONE);
 				FormLayout group1Layout = new FormLayout();
@@ -138,7 +154,7 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 				projectList = new List(dialogShell, SWT.NONE);
 				projectList.setLayoutData(projectListLData);
 
-				for (Project p : Services.getEnvironment().getWorkspace())
+				for (Project p : Workspace.getWorkspace())
 					projectList.add(p.getName());
 			}
 			{
@@ -216,8 +232,8 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 		int index = projectList.getSelectionIndex();
 		if (index > -1) {
 			String name = projectList.getItem(index);
-			Services.getEnvironment().setCurrentProject(
-					Services.getEnvironment().getWorkspace().getProject(name));
+			Workspace.getWorkspace().setCurrentProject(
+					Workspace.getWorkspace().getProject(name));
 			dialogShell.close();
 		}
 	}
@@ -230,7 +246,7 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 			messageBox.setMessage("Really delete?");
 			if (messageBox.open() == SWT.YES) {
 				String name = projectList.getItem(index);
-				Services.getEnvironment().removeProject(name);
+				Workspace.getWorkspace().removeProject(name);
 			}
 		}
 	}
@@ -238,14 +254,19 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 	private void cancelWidgetSelected(SelectionEvent evt) {
 		dialogShell.close();
 	}
+	
+
 
 	private void projectNewBtnWidgetSelected(SelectionEvent evt) {
 		String name = projectNameTxt.getText();
 		if (name != null && !name.trim().equals("")) {
-			Services.getEnvironment().createProject(name);
+			Workspace.getWorkspace().createProject(name);
 		}
 
 		projectNameTxt.setText("");
-		// loadProject.setFocus();
+	}
+	
+	private void dialogShellWidgetDisposed(DisposeEvent evt) {
+		Workspace.getWorkspace().removeProjectListener(listener);
 	}
 }

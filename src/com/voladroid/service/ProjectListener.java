@@ -11,4 +11,6 @@ public interface ProjectListener extends EventListener {
 	void projectRemoved(Project project);
 
 	void projectAdded(Project project);
+	
+	void projectChange(Project project);
 }

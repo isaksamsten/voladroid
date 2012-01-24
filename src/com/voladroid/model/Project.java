@@ -10,11 +10,13 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 
 import com.voladroid.model.adb.Process;
-import com.voladroid.service.Services;
 
 public class Project {
 
 	public static final String DUMP_LOCATION = "memory";
+
+	public static final String DUMP_LOCATION_KEY = "dump-location";
+	public static final String DUMPS_KEY = "dumps";
 
 	private String name;
 
@@ -42,17 +44,30 @@ public class Project {
 
 	public List<Dump> getDumps() {
 		List<Dump> dumps = new LinkedList<Dump>();
-		for (Object name : getConfig().getList("dumps")) {
+		for (Object name : getConfig().getList(DUMPS_KEY)) {
 			dumps.add(new Dump(this, (String) name));
 		}
 
 		return dumps;
 	}
 
+	/**
+	 * Bad.
+	 * @param name
+	 * @return
+	 */
+	public Dump getDump(String name) {
+		for (Dump d : getDumps())
+			if (d.getName().equals(name))
+				return d;
+
+		return null;
+	}
+
 	public File getDumpLocation() {
 		String dump = DUMP_LOCATION;
-		if (getConfig().containsKey("dump-location")) {
-			dump = getConfig().getString("dump-location");
+		if (getConfig().containsKey(DUMP_LOCATION_KEY)) {
+			dump = getConfig().getString(DUMP_LOCATION_KEY);
 		}
 
 		File location = FileUtils.getFile(getLocation(), dump);
@@ -83,18 +98,12 @@ public class Project {
 		String name = p.getPid() + p.getProcessDescription()
 				+ new Date().getTime();
 
-		File file = FileUtils.getFile(getDumpLocation(), name + ".tmp");
-		File to = FileUtils.getFile(getDumpLocation(), name + ".hprof");
+		File file = FileUtils.getFile(getDumpLocation(), name + ".hprof");
 		FileUtils.writeByteArrayToFile(file, data);
+		List<Object> dumps = getConfig().getList("dumps");
+		dumps.add(name);
+		getConfig().setProperty("dumps", dumps);
 
-		try {
-			Services.getEnvironment().convertHprof(file, to);
-			List<Object> dumps = getConfig().getList("dumps");
-			dumps.add(name);
-			getConfig().setProperty("dumps", dumps);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
+		workspace.fireProjectChange(this);
 	}
 }

@@ -1,19 +1,23 @@
 package voladroid;
 
-import java.util.logging.Logger;
+import java.io.File;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.eclipse.mat.snapshot.ISnapshot;
+import org.eclipse.mat.snapshot.SnapshotFactory;
+import org.eclipse.mat.snapshot.model.IClass;
+import org.eclipse.mat.util.ConsoleProgressListener;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 import com.voladroid.model.Project;
 import com.voladroid.model.Workspace;
 import com.voladroid.model.adb.DebugBridge;
-import com.voladroid.service.Services;
 
 public class Activator implements BundleActivator {
-	private static Logger logger = Logger.getLogger(Activator.class
-			.getSimpleName());
+	private static Log logger = LogFactory.getLog(Activator.class);
 
 	/*
 	 * (non-Javadoc)
@@ -24,7 +28,7 @@ public class Activator implements BundleActivator {
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
-		System.out.println("Hello World!!");
+		logger.info("Starting...");
 	}
 
 	/*
@@ -35,18 +39,24 @@ public class Activator implements BundleActivator {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
+//		ISnapshot snapshot = SnapshotFactory.openSnapshot(new File(
+//				"/home/isak/projects/voladroid/test.hprof"),
+//				new ConsoleProgressListener(System.out));
+//		
+//		for(IClass i : snapshot.getClasses()) {
+//			i.
+//		}
+
 		logger.info("Stopping...");
 		try {
-			Workspace s = Services.getEnvironment().getWorkspace();
+			Workspace s = Workspace.getWorkspace();
 			s.getConfig().save();
 			for (Project p : s) {
 				p.getConfig().save();
 			}
 		} catch (ConfigurationException e) {
-			logger.info(e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		DebugBridge.getInstance().terminate();
 	}
-
 }
