@@ -3,8 +3,10 @@ package com.voladroid.ui;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.mat.SnapshotException;
+import org.eclipse.mat.query.IResult;
 import org.eclipse.mat.snapshot.ISnapshot;
 import org.eclipse.mat.snapshot.model.IClass;
+import org.eclipse.mat.snapshot.query.SnapshotQuery;
 import org.eclipse.mat.util.ConsoleProgressListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
@@ -49,6 +51,7 @@ public class ClassBrowser extends org.eclipse.swt.widgets.Composite {
 	private static final Log logger = LogFactory.getLog(ClassBrowser.class);
 
 	private Table classes;
+	private Button compare;
 	private Button filterBtn;
 	private Text filterTxt;
 	private Composite composite1;
@@ -164,6 +167,17 @@ public class ClassBrowser extends org.eclipse.swt.widgets.Composite {
 						}
 					});
 				}
+				{
+					compare = new Button(composite1, SWT.PUSH | SWT.CENTER);
+					RowData compareLData = new RowData();
+					compare.setLayoutData(compareLData);
+					compare.setText("Compare");
+					compare.addSelectionListener(new SelectionAdapter() {
+						public void widgetSelected(SelectionEvent evt) {
+							compareWidgetSelected(evt);
+						}
+					});
+				}
 				GridData classesLData = new GridData();
 				classesLData.grabExcessHorizontalSpace = true;
 				classesLData.grabExcessVerticalSpace = true;
@@ -260,6 +274,16 @@ public class ClassBrowser extends org.eclipse.swt.widgets.Composite {
 		}
 		ClassDialog dialog = new ClassDialog(getShell(), clazz, SWT.NONE);
 		dialog.open();
+	}
+	
+	private void compareWidgetSelected(SelectionEvent evt) {
+		try {
+			SnapshotQuery query = SnapshotQuery.lookup("histogram", currentSnapshot);
+			IResult res = query.execute(new ConsoleProgressListener(System.out));
+			System.out.println(res);
+		} catch (SnapshotException e) {
+			logger.error(e, e);
+		}
 	}
 
 }
