@@ -105,7 +105,7 @@ public class Workspace implements Iterable<Project> {
 				FileUtils.forceDelete(project.getLocation());
 				fireProjectRemove(project);
 			} catch (IOException e) {
-				e.printStackTrace();
+				throw new ProjectNotFoundException(e);
 			}
 		}
 	}
@@ -168,6 +168,12 @@ public class Workspace implements Iterable<Project> {
 
 	public void removeProjectListener(ProjectListener l) {
 		events.remove(ProjectListener.class, l);
+	}
+
+	@Override
+	public String toString() {
+		return "Workspace [getCurrentProject()=" + getCurrentProject()
+				+ ", getLocation()=" + getLocation() + "]";
 	}
 
 }

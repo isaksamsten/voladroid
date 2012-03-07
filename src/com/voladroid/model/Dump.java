@@ -47,4 +47,10 @@ public class Dump implements Comparable<Dump> {
 		return getName().compareTo(o.getName());
 	}
 
+	@Override
+	public String toString() {
+		return "Dump [getName()=" + getName() + ", getLocation()="
+				+ getLocation() + "]";
+	}
+
 }

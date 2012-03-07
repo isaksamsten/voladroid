@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.mat.SnapshotException;
 import org.eclipse.mat.query.IResult;
+import org.eclipse.mat.snapshot.Histogram;
 import org.eclipse.mat.snapshot.ISnapshot;
 import org.eclipse.mat.snapshot.model.IClass;
 import org.eclipse.mat.snapshot.query.SnapshotQuery;
@@ -258,13 +259,13 @@ public class ClassBrowser extends org.eclipse.swt.widgets.Composite {
 		}
 
 	}
-	
+
 	private void classesWidgetSelected(SelectionEvent evt) {
 		int idx = classes.getSelectionIndex();
 		String name = classes.getItem(idx).getText(1);
 		IClass clazz = null;
 		try {
-			for(IClass c : currentSnapshot.getClassesByName(name, false)) {
+			for (IClass c : currentSnapshot.getClassesByName(name, false)) {
 				clazz = c;
 				break;
 			}
@@ -275,12 +276,26 @@ public class ClassBrowser extends org.eclipse.swt.widgets.Composite {
 		ClassDialog dialog = new ClassDialog(getShell(), clazz, SWT.NONE);
 		dialog.open();
 	}
-	
+
+	private Histogram res = null, res2 = null;
+
 	private void compareWidgetSelected(SelectionEvent evt) {
 		try {
-			SnapshotQuery query = SnapshotQuery.lookup("histogram", currentSnapshot);
-			IResult res = query.execute(new ConsoleProgressListener(System.out));
-			System.out.println(res);
+			SnapshotQuery query = SnapshotQuery.lookup("histogram",
+					currentSnapshot);
+			if (res == null)
+				res = (Histogram) query.execute(new ConsoleProgressListener(
+						System.out));
+			else
+				res2 = (Histogram) query.execute(new ConsoleProgressListener(
+						System.out));
+			
+			if(res != null && res2 != null) {
+				Histogram h = res.intersectWithAnother(res2);
+				System.out.println(h.getNumberOfObjects());			
+			}
+
+			System.out.println(res.getNumberOfObjects());
 		} catch (SnapshotException e) {
 			logger.error(e, e);
 		}

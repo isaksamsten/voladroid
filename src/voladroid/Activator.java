@@ -39,14 +39,6 @@ public class Activator implements BundleActivator {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-//		ISnapshot snapshot = SnapshotFactory.openSnapshot(new File(
-//				"/home/isak/projects/voladroid/test.hprof"),
-//				new ConsoleProgressListener(System.out));
-//		
-//		for(IClass i : snapshot.getClasses()) {
-//			i.
-//		}
-
 		logger.info("Stopping...");
 		try {
 			Workspace s = Workspace.getWorkspace();

@@ -11,5 +11,17 @@
          </run>
       </application>
    </extension>
+   <extension
+         id="console"
+         name="VoladroidConsole"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="*"
+            thread="any">
+         <run
+               class="VoladroidConsole">
+         </run>
+      </application>
+   </extension>
 
 </plugin>

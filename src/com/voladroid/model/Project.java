@@ -53,6 +53,7 @@ public class Project {
 
 	/**
 	 * Bad.
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -106,4 +107,11 @@ public class Project {
 
 		workspace.fireProjectChange(this);
 	}
+
+	@Override
+	public String toString() {
+		return "Project [getName()=" + getName() + ", getDumpLocation()="
+				+ getDumpLocation() + ", getLocation()=" + getLocation() + "]";
+	}
+
 }
