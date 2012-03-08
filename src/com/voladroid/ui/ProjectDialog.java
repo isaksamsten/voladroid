@@ -19,7 +19,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import com.voladroid.model.Project;
 import com.voladroid.model.Workspace;
 import com.voladroid.service.ProjectListener;
-import com.voladroid.service.Services;
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
@@ -94,6 +93,7 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 			dialogShell.setSize(283, 364);
 			dialogShell.setText("Project workspace");
 			dialogShell.addDisposeListener(new DisposeListener() {
+				@Override
 				public void widgetDisposed(DisposeEvent evt) {
 					dialogShellWidgetDisposed(evt);
 				}

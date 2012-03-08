@@ -1,14 +1,9 @@
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Scanner;
-
-import javax.print.attribute.standard.PDLOverrideSupported;
 
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.mat.util.ConsoleProgressListener;
 import org.eclipse.mat.util.VoidProgressListener;
 
 import com.voladroid.model.Dump;
@@ -20,6 +15,7 @@ import com.voladroid.model.compare.ObjectResultProducer;
 import com.voladroid.model.compare.Result;
 import com.voladroid.model.compare.ResultProducer;
 import com.voladroid.ui.cli.args.Argument;
+import com.voladroid.ui.cli.args.ArgumentException;
 import com.voladroid.ui.cli.args.ArgumentExecutor;
 import com.voladroid.ui.cli.args.ArgumentStack;
 
@@ -64,19 +60,19 @@ public class VoladroidConsole implements IApplication {
 
 			@Override
 			public ArgumentExecutor execute(List<String> args) throws Exception {
-				System.out.println(stack.local().name());
+				System.out.println(stack.local());
 				return null;
 			}
 		});
 
-		root.add("workspace", new Argument(-1,
+		root.add("enter", new Argument(-1,
 				"<name> Enter workspace (<name> is optional)") {
 
 			@Override
 			public ArgumentExecutor execute(List<String> args) throws Exception {
 				Workspace space = get("workspace");
-				System.out.println("Current workspace is "
-						+ space.getLocation());
+				System.out.println("Change workspace: '" + space.getLocation()
+						+ "'");
 				return workspace;
 			}
 
@@ -130,8 +126,8 @@ public class VoladroidConsole implements IApplication {
 			}
 		});
 
-		workspace.add("use", new Argument(-1,
-				"<name> Use the project (<name> optional)") {
+		workspace.add("enter", new Argument(-1,
+				"<name> Enter project (<name> optional)") {
 
 			@Override
 			public ArgumentExecutor execute(List<String> args) throws Exception {
@@ -180,13 +176,13 @@ public class VoladroidConsole implements IApplication {
 
 				Result res = CompareUtils.subsequent(p.getDumps(), producer,
 						new VoidProgressListener());
-				System.out.println("Sample avrage: " + res.getSampleAvrage());
+				System.out.println("Sample average: " + res.getSampleAvrage());
 				System.out.println("Standard Deviation: "
 						+ res.getStandardDeviation());
 				System.out.println("Total avrage: " + res.getTotalAvrage());
 
-				System.out.println("Sample avrage (%): "
-						+ res.getSampleAvrage() / res.getTotalAvrage());
+				System.out.format("Sample average (percent changed): %f \n",
+						(res.getSampleAvrage() / res.getTotalAvrage()) * 100);
 				System.out.println("Standard Deviation (%): "
 						+ res.getStandardDeviation() / res.getTotalAvrage());
 
@@ -221,7 +217,7 @@ public class VoladroidConsole implements IApplication {
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
-		stack.push(workspace);
+		stack.push(root);
 
 		Scanner in = new Scanner(System.in);
 		while (true) {
@@ -235,9 +231,10 @@ public class VoladroidConsole implements IApplication {
 				} else if (stack.empty()) {
 					break;
 				}
-			} catch (Exception e) {
+			} catch (ArgumentException e) {
 				System.out.println(e);
-				//e.printStackTrace();
+			} catch (Exception e) {
+
 			}
 		}
 

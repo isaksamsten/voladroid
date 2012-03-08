@@ -36,7 +36,8 @@ public class ObjectResultProducer implements ResultProducer {
 
 		double stdDev = standardDeviation(samples, diffAvg);
 
-		return new Result(diffAvg, stdDev, totalAvrage);
+		return new Result(diffAvg, stdDev, totalAvrage,
+				samples.toArray(new Long[0]));
 	}
 
 	protected double standardDeviation(ArrayList<Long> samples, double diffAvg) {
@@ -65,6 +66,7 @@ public class ObjectResultProducer implements ResultProducer {
 			Histogram b = histograms.get(n + 1);
 			Histogram d = (Histogram) comparer.compare(a, b);
 
+			// sample is the number of objects changed
 			samples.add(d.getNumberOfObjects());
 		}
 

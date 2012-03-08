@@ -1,7 +1,5 @@
 package com.voladroid.model.compare;
 
-import java.io.BufferedInputStream;
-
 import org.eclipse.mat.query.IResult;
 import org.eclipse.mat.query.ResultMetaData;
 

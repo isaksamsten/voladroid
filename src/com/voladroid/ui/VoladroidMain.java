@@ -5,17 +5,14 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 import com.cloudgarden.resource.SWTResourceManager;
-import com.voladroid.model.Dump;
 import com.voladroid.model.Project;
 import com.voladroid.model.Workspace;
 import com.voladroid.service.ProjectListener;
-import com.voladroid.service.Services;
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI

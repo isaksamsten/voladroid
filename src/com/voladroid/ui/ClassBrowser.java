@@ -3,16 +3,11 @@ package com.voladroid.ui;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.mat.SnapshotException;
-import org.eclipse.mat.query.IResult;
 import org.eclipse.mat.snapshot.Histogram;
 import org.eclipse.mat.snapshot.ISnapshot;
 import org.eclipse.mat.snapshot.model.IClass;
 import org.eclipse.mat.snapshot.query.SnapshotQuery;
 import org.eclipse.mat.util.ConsoleProgressListener;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
@@ -20,15 +15,11 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -73,6 +64,7 @@ public class ClassBrowser extends org.eclipse.swt.widgets.Composite {
 	 * Overriding checkSubclass allows this class to extend
 	 * org.eclipse.swt.widgets.Composite
 	 */
+	@Override
 	protected void checkSubclass() {
 	}
 
@@ -144,6 +136,7 @@ public class ClassBrowser extends org.eclipse.swt.widgets.Composite {
 					dumps = new Combo(composite1, SWT.NONE);
 					dumps.setLayoutData(dumpsLData);
 					dumps.addSelectionListener(new SelectionAdapter() {
+						@Override
 						public void widgetSelected(SelectionEvent evt) {
 							dumpsWidgetSelected(evt);
 						}
@@ -163,6 +156,7 @@ public class ClassBrowser extends org.eclipse.swt.widgets.Composite {
 					filterBtn.setLayoutData(filterBtnLData);
 					filterBtn.setText("Filter");
 					filterBtn.addSelectionListener(new SelectionAdapter() {
+						@Override
 						public void widgetSelected(SelectionEvent evt) {
 							filterBtnWidgetSelected(evt);
 						}
@@ -174,6 +168,7 @@ public class ClassBrowser extends org.eclipse.swt.widgets.Composite {
 					compare.setLayoutData(compareLData);
 					compare.setText("Compare");
 					compare.addSelectionListener(new SelectionAdapter() {
+						@Override
 						public void widgetSelected(SelectionEvent evt) {
 							compareWidgetSelected(evt);
 						}
@@ -188,6 +183,7 @@ public class ClassBrowser extends org.eclipse.swt.widgets.Composite {
 				classes.setLayoutData(classesLData);
 				classes.setHeaderVisible(true);
 				classes.addSelectionListener(new SelectionAdapter() {
+					@Override
 					public void widgetSelected(SelectionEvent evt) {
 						classesWidgetSelected(evt);
 					}

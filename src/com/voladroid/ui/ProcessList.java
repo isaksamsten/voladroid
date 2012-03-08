@@ -200,6 +200,7 @@ public class ProcessList extends org.eclipse.swt.widgets.Composite {
 				table1.setLayoutData(table1LData);
 				table1.setHeaderVisible(true);
 				table1.addSelectionListener(new SelectionAdapter() {
+					@Override
 					public void widgetSelected(SelectionEvent evt) {
 						table1WidgetSelected(evt);
 					}

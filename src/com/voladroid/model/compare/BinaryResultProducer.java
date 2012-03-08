@@ -1,16 +1,10 @@
 package com.voladroid.model.compare;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.eclipse.mat.snapshot.Histogram;
 import org.eclipse.mat.util.IProgressListener;
 
 import com.voladroid.model.Dump;
@@ -36,8 +30,8 @@ public class BinaryResultProducer extends ObjectResultProducer {
 		double diffAvg = sampleAvrage(samples);
 		double stdDev = standardDeviation(samples, diffAvg);
 
-		// TODO Auto-generated method stub
-		return new Result(diffAvg, stdDev, totalAvrage);
+		return new Result(diffAvg, stdDev, totalAvrage,
+				samples.toArray(new Long[0]));
 	}
 
 	private ArrayList<Long> samples(List<ByteDump> bytes) {

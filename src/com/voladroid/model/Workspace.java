@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
-import org.apache.commons.collections.list.UnmodifiableList;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 

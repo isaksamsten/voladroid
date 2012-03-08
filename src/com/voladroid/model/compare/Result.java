@@ -6,12 +6,18 @@ public class Result {
 	private double standardDeviation;
 	private double totalAvrage;
 	private long totalDiff;
+	private Long[] samples;
 
 	public Result(double sampleAvrage, double standardDeviation,
-			double totalAvrage) {
+			double totalAvrage, Long[] samples) {
 		this.sampleAvrage = sampleAvrage;
 		this.standardDeviation = standardDeviation;
 		this.totalAvrage = totalAvrage;
+		this.samples = samples;
+	}
+
+	public Long[] samples() {
+		return samples;
 	}
 
 	public double getSampleAvrage() {

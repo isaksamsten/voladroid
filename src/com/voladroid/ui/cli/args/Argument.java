@@ -15,6 +15,7 @@ public abstract class Argument implements IArgument {
 		return arity;
 	}
 
+	@Override
 	public void parent(ArgumentExecutor a) {
 		this.parent = a;
 	}
@@ -31,6 +32,7 @@ public abstract class Argument implements IArgument {
 		parent().put(key, data);
 	}
 
+	@Override
 	public ArgumentExecutor parent() {
 		return parent;
 	}

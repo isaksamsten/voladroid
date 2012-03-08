@@ -2,7 +2,6 @@ package com.voladroid.model.compare;
 
 import java.util.List;
 
-import org.eclipse.mat.query.IResult;
 import org.eclipse.mat.util.IProgressListener;
 
 import com.voladroid.model.Dump;

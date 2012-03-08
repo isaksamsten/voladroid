@@ -108,12 +108,14 @@ public class DebugBridge implements IDebugBridge {
 		});
 	}
 
+	@Override
 	public void init(boolean b) {
 		AndroidDebugBridge.init(b);
 		adb = AndroidDebugBridge.createBridge(adbpath, b);
 		initialized = true;
 	}
 
+	@Override
 	public boolean isInit() {
 		return initialized;
 	}

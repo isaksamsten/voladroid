@@ -110,4 +110,21 @@ public class ArgumentExecutor {
 	public <T> T get(String key) {
 		return (T) getSafe(key);
 	}
+
+	@Override
+	public String toString() {
+
+		StringBuilder builder = new StringBuilder();
+		for (Map.Entry<String, Object> kv : data.entrySet()) {
+			builder.append(kv.getKey());
+			builder.append(": ");
+			builder.append(kv.getValue());
+			builder.append(", ");
+		}
+		if (data.size() > 0) {
+			builder.replace(builder.length() - 2, builder.length(), "");
+		}
+
+		return name() + " (" + builder + ")";
+	}
 }

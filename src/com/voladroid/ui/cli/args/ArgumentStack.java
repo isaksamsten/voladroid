@@ -40,6 +40,7 @@ public class ArgumentStack implements Iterable<ArgumentExecutor> {
 		return stack.isEmpty();
 	}
 
+	@Override
 	public Iterator<ArgumentExecutor> iterator() {
 		return stack.iterator();
 	}

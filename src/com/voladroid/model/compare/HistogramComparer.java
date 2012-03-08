@@ -2,7 +2,6 @@ package com.voladroid.model.compare;
 
 import org.eclipse.mat.query.IResult;
 import org.eclipse.mat.snapshot.Histogram;
-import org.eclipse.mat.util.IProgressListener;
 
 public class HistogramComparer implements IDumpComparer {
 

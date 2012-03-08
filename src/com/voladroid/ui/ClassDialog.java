@@ -4,28 +4,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.mat.SnapshotException;
-import org.eclipse.mat.snapshot.ISnapshot;
 import org.eclipse.mat.snapshot.model.FieldDescriptor;
 import org.eclipse.mat.snapshot.model.IClass;
 import org.eclipse.mat.snapshot.model.IObject;
 import org.eclipse.mat.snapshot.model.NamedReference;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 
@@ -78,6 +68,7 @@ public class ClassDialog extends org.eclipse.swt.widgets.Dialog {
 				tree1.setLayoutData(tree1LData);
 				tree1.setHeaderVisible(true);
 				tree1.addTreeListener(new TreeAdapter() {
+					@Override
 					public void treeExpanded(TreeEvent evt) {
 						tree1TreeExpanded(evt);
 					}

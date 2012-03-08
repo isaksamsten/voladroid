@@ -1,14 +1,8 @@
 package voladroid;
 
-import java.io.File;
-
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.mat.snapshot.ISnapshot;
-import org.eclipse.mat.snapshot.SnapshotFactory;
-import org.eclipse.mat.snapshot.model.IClass;
-import org.eclipse.mat.util.ConsoleProgressListener;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
