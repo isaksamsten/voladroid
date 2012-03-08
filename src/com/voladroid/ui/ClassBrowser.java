@@ -289,7 +289,7 @@ public class ClassBrowser extends org.eclipse.swt.widgets.Composite {
 			else
 				res2 = (Histogram) query.execute(new ConsoleProgressListener(
 						System.out));
-			
+					
 			if(res != null && res2 != null) {
 				Histogram h = res.intersectWithAnother(res2);
 				System.out.println(h.getNumberOfObjects());			

@@ -10,6 +10,7 @@ import org.eclipse.mat.util.IProgressListener;
 
 public class Dump implements Comparable<Dump> {
 	private Project project;
+	private ISnapshot snapshot = null;
 	private String name;
 
 	public Dump(Project p, String name) {
@@ -39,7 +40,14 @@ public class Dump implements Comparable<Dump> {
 	 */
 	public ISnapshot getSnapshot(IProgressListener listener)
 			throws SnapshotException {
-		return SnapshotFactory.openSnapshot(getLocation(), listener);
+		if (snapshot == null)
+			snapshot = SnapshotFactory.openSnapshot(getLocation(), listener);
+
+		return snapshot;
+	}
+
+	public void clear() {
+		snapshot = null;
 	}
 
 	@Override

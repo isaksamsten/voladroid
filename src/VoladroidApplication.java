@@ -7,6 +7,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import com.voladroid.model.adb.DebugBridge;
 import com.voladroid.ui.VoladroidMain;
 
 /**
@@ -22,6 +23,8 @@ public class VoladroidApplication implements IApplication {
 	 */
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
+		DebugBridge.getInstance().init(true);
+
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
 		VoladroidMain inst = new VoladroidMain(shell, SWT.NULL);

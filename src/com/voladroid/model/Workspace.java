@@ -3,11 +3,13 @@ package com.voladroid.model;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
+import org.apache.commons.collections.list.UnmodifiableList;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 
@@ -132,6 +134,10 @@ public class Workspace implements Iterable<Project> {
 			if (p.getName().equals(name))
 				return p;
 		return null;
+	}
+
+	public List<Project> getProjects() {
+		return Collections.unmodifiableList(projects);
 	}
 
 	public File getLocation() {

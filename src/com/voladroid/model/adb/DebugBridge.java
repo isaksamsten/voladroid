@@ -29,12 +29,10 @@ public class DebugBridge implements IDebugBridge {
 	}
 
 	private AndroidDebugBridge adb = null;
+	private boolean initialized = false;
 	private EventListenerList listeners = new EventListenerList();
 
 	private DebugBridge() {
-		AndroidDebugBridge.init(true);
-		adb = AndroidDebugBridge.createBridge(adbpath, true);
-
 		AndroidDebugBridge.addClientChangeListener(new IClientChangeListener() {
 
 			@Override
@@ -108,6 +106,16 @@ public class DebugBridge implements IDebugBridge {
 
 			}
 		});
+	}
+
+	public void init(boolean b) {
+		AndroidDebugBridge.init(b);
+		adb = AndroidDebugBridge.createBridge(adbpath, b);
+		initialized = true;
+	}
+
+	public boolean isInit() {
+		return initialized;
 	}
 
 	protected void fireDump(byte[] file, Client c) {

@@ -28,7 +28,7 @@ public class Activator implements BundleActivator {
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
-		logger.info("Starting...");
+		logger.info("Initialize");
 	}
 
 	/*
@@ -39,7 +39,7 @@ public class Activator implements BundleActivator {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		logger.info("Stopping...");
+		logger.info("Exit");
 		try {
 			Workspace s = Workspace.getWorkspace();
 			s.getConfig().save();
@@ -49,6 +49,8 @@ public class Activator implements BundleActivator {
 		} catch (ConfigurationException e) {
 			logger.error(e.getMessage(), e);
 		}
-		DebugBridge.getInstance().terminate();
+		if (DebugBridge.getInstance().isInit()) {
+			DebugBridge.getInstance().terminate();
+		}
 	}
 }

@@ -65,6 +65,25 @@ public class Project {
 		return null;
 	}
 
+	/**
+	 * Bad
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Dump getDump(int id) {
+		int i = 0;
+		List<Dump> dumps = getDumps();
+		for (Dump d : dumps) {
+			if (i == id) {
+				return d;
+			}
+			i++;
+		}
+
+		return null;
+	}
+
 	public File getDumpLocation() {
 		String dump = DUMP_LOCATION;
 		if (getConfig().containsKey(DUMP_LOCATION_KEY)) {

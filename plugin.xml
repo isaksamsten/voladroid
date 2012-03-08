@@ -23,5 +23,25 @@
          </run>
       </application>
    </extension>
+   <extension
+         id="voldroid_cli_1_0"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="voladroid.console"
+            name="Voladroid Console">
+      </product>
+   </extension>
+   <extension
+         id="voladroid_gui_1_0"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="voladroid.voladroid"
+            name="Voladroid">
+         <property
+               name="appName"
+               value="Voladroid">
+         </property>
+      </product>
+   </extension>
 
 </plugin>

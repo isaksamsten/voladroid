@@ -6,6 +6,8 @@ public interface IDebugBridge {
 
 	List<Device> getDevices();
 
+	void init(boolean b);
+
 	void terminate();
 
 	public abstract boolean restart();
@@ -19,4 +21,6 @@ public interface IDebugBridge {
 	public abstract int getConnectionAttemptCount();
 
 	void add(DebugBridgeListener l);
+
+	boolean isInit();
 }
