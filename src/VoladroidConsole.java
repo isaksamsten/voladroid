@@ -14,6 +14,7 @@ import com.voladroid.model.compare.CompareUtils;
 import com.voladroid.model.compare.ObjectResultProducer;
 import com.voladroid.model.compare.Result;
 import com.voladroid.model.compare.ResultProducer;
+import com.voladroid.service.Services;
 import com.voladroid.ui.cli.args.Argument;
 import com.voladroid.ui.cli.args.ArgumentException;
 import com.voladroid.ui.cli.args.ArgumentExecutor;
@@ -56,6 +57,26 @@ public class VoladroidConsole implements IApplication {
 			}
 		});
 
+		root.add("debug", new Argument(-1,
+				"<true|false> Enable/Disable debugging (current context)") {
+
+			@Override
+			public ArgumentExecutor execute(List<String> args) throws Exception {
+				if (args.size() > 0) {
+					stack.local().put("debug",
+							Boolean.parseBoolean(args.get(0)));
+				} else {
+					Boolean debug = stack.local().get("debug");
+					if (debug == null) {
+						debug = false;
+					}
+					System.out
+							.println("Debugging is " + (debug ? "on" : "off"));
+				}
+				return null;
+			}
+		});
+
 		root.add("where", new Argument(0, "Show your current location") {
 
 			@Override
@@ -86,6 +107,9 @@ public class VoladroidConsole implements IApplication {
 				return null;
 			}
 		});
+
+		root.alias("where", "pwd");
+		root.alias("enter", "cd");
 	}
 
 	private ArgumentExecutor workspace = new ArgumentExecutor("Workspace", root);
@@ -133,21 +157,27 @@ public class VoladroidConsole implements IApplication {
 			public ArgumentExecutor execute(List<String> args) throws Exception {
 				Workspace space = get("workspace");
 				Project p = null;
+				String name = "";
 				if (args.isEmpty()) {
 					p = space.getCurrentProject();
 				} else {
-					String name = args.get(0);
+					name = args.get(0);
 					p = space.getProject(name);
 				}
 
 				if (p != null) {
 					project.put("project", p);
 					return project;
+				} else {
+					System.out.format("Could not enter project '%s'\n", name);
 				}
 
 				return null;
 			}
 		});
+
+		workspace.alias("projects", "ls");
+		workspace.alias("enter", "cd");
 	}
 
 	private ArgumentExecutor project = new ArgumentExecutor("Project",
@@ -176,16 +206,7 @@ public class VoladroidConsole implements IApplication {
 
 				Result res = CompareUtils.subsequent(p.getDumps(), producer,
 						new VoidProgressListener());
-				System.out.println("Sample average: " + res.getSampleAvrage());
-				System.out.println("Standard Deviation: "
-						+ res.getStandardDeviation());
-				System.out.println("Total avrage: " + res.getTotalAvrage());
-
-				System.out.format("Sample average (percent changed): %f \n",
-						(res.getSampleAvrage() / res.getTotalAvrage()) * 100);
-				System.out.println("Standard Deviation (%): "
-						+ res.getStandardDeviation() / res.getTotalAvrage());
-
+				System.out.println(res);
 				return null;
 			}
 		});
@@ -213,6 +234,8 @@ public class VoladroidConsole implements IApplication {
 				return null;
 			}
 		});
+
+		project.alias("images", "ls");
 	}
 
 	@Override
@@ -231,10 +254,13 @@ public class VoladroidConsole implements IApplication {
 				} else if (stack.empty()) {
 					break;
 				}
-			} catch (ArgumentException e) {
-				System.out.println(e);
 			} catch (Exception e) {
-
+				Boolean debug = stack.local().get("debug");
+				if (debug != null && debug) {
+					System.out.print(Services.getStackTrace(e));
+				} else {
+					System.out.println(e);
+				}
 			}
 		}
 
