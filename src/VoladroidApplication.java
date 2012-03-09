@@ -43,6 +43,7 @@ public class VoladroidApplication implements IApplication {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
+		display.dispose();
 		return IApplication.EXIT_OK;
 	}
 

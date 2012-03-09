@@ -21,6 +21,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
@@ -68,47 +70,73 @@ public class ClassBrowser extends org.eclipse.swt.widgets.Composite {
 	protected void checkSubclass() {
 	}
 
+	private ProjectListener listener = new ProjectListener() {
+
+		@Override
+		public void projectRemoved(Project project) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void projectChange(Project p) {
+			dumps.removeAll();
+			for (Dump d : p.getDumps()) {
+				dumps.add(d.getName());
+			}
+		}
+
+		@Override
+		public void projectAdded(Project project) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void currentProject(Project p) {
+			currentProject = p;
+			dumps.removeAll();
+			for (Dump d : p.getDumps()) {
+				dumps.add(d.getName());
+			}
+
+		}
+	};
+
+	public void setProject(Project p) {
+		currentProject = p;
+		if (currentProject != null) {
+			currentProject.getWorkspace().removeProjectListener(listener);
+			currentProject.getWorkspace().addProjectListener(listener);
+			dumps.removeAll();
+			for (Dump d : currentProject.getDumps()) {
+				dumps.add(d.getName());
+			}
+		}
+	}
+
 	/**
 	 * Auto-generated method to display this org.eclipse.swt.widgets.Composite
 	 * inside a new Shell.
 	 */
-
-	public ClassBrowser(org.eclipse.swt.widgets.Composite parent, int style) {
+	public ClassBrowser(org.eclipse.swt.widgets.Composite parent, Project p,
+			int style) {
 		super(parent, style);
 		initGUI();
-		Workspace.getWorkspace().addProjectListener(new ProjectListener() {
+		addDisposeListener(new DisposeListener() {
 
 			@Override
-			public void projectRemoved(Project project) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void projectChange(Project p) {
-				dumps.removeAll();
-				for (Dump d : p.getDumps()) {
-					dumps.add(d.getName());
-				}
-			}
-
-			@Override
-			public void projectAdded(Project project) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void currentProject(Project p) {
-				currentProject = p;
-				dumps.removeAll();
-				for (Dump d : p.getDumps()) {
-					dumps.add(d.getName());
-				}
-
+			public void widgetDisposed(DisposeEvent e) {
+				if (currentProject != null)
+					currentProject.getWorkspace().removeProjectListener(
+							listener);
 			}
 		});
+		setProject(p);
+	}
 
+	public ClassBrowser(org.eclipse.swt.widgets.Composite parent, int s) {
+		this(parent, null, s);
 	}
 
 	private void initGUI() {
@@ -285,10 +313,10 @@ public class ClassBrowser extends org.eclipse.swt.widgets.Composite {
 			else
 				res2 = (Histogram) query.execute(new ConsoleProgressListener(
 						System.out));
-					
-			if(res != null && res2 != null) {
+
+			if (res != null && res2 != null) {
 				Histogram h = res.intersectWithAnother(res2);
-				System.out.println(h.getNumberOfObjects());			
+				System.out.println(h.getNumberOfObjects());
 			}
 
 			System.out.println(res.getNumberOfObjects());

@@ -81,7 +81,7 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 		Workspace.getWorkspace().addProjectListener(listener);
 	}
 
-	public void open() {
+	public Project open() {
 		try {
 			Shell parent = getParent();
 			dialogShell = new Shell(parent, SWT.DIALOG_TRIM
@@ -226,6 +226,8 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		return Workspace.getWorkspace().getCurrentProject();
 	}
 
 	private void loadProjectWidgetSelected(SelectionEvent evt) {
@@ -254,8 +256,6 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 	private void cancelWidgetSelected(SelectionEvent evt) {
 		dialogShell.close();
 	}
-	
-
 
 	private void projectNewBtnWidgetSelected(SelectionEvent evt) {
 		String name = projectNameTxt.getText();
@@ -265,7 +265,7 @@ public class ProjectDialog extends org.eclipse.swt.widgets.Dialog {
 
 		projectNameTxt.setText("");
 	}
-	
+
 	private void dialogShellWidgetDisposed(DisposeEvent evt) {
 		Workspace.getWorkspace().removeProjectListener(listener);
 	}

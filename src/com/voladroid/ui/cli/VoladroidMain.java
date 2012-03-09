@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.eclipse.mat.util.VoidProgressListener;
+import org.eclipse.swt.widgets.Display;
 
 import com.voladroid.model.Dump;
 import com.voladroid.model.Project;
@@ -19,6 +20,7 @@ import com.voladroid.model.compare.ObjectResultProducer;
 import com.voladroid.model.compare.Result;
 import com.voladroid.model.compare.ResultProducer;
 import com.voladroid.service.Services;
+import com.voladroid.ui.ProjectInspector;
 import com.voladroid.ui.cli.args.Argument;
 import com.voladroid.ui.cli.args.ArgumentExecutor;
 import com.voladroid.ui.cli.args.ArgumentStack;
@@ -28,6 +30,7 @@ public class VoladroidMain {
 
 	private ArgumentStack stack = ArgumentStack.getInstance();
 	private Scanner in = new Scanner(System.in);
+	private ProjectInspector inspector = new ProjectInspector();
 
 	private ArgumentExecutor root = new ArgumentExecutor("Root", this);
 	{
@@ -224,6 +227,24 @@ public class VoladroidMain {
 			}
 		});
 
+		project.add("inspect", new Argument(0,
+				"Inspect a project in the class browser") {
+
+			@Override
+			public ArgumentExecutor execute(List<String> args) throws Exception {
+				final Project p = get("project");
+				Display.getDefault().asyncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						inspector.open(p);
+					}
+				});
+
+				return null;
+			}
+		});
+
 		project.add("enter", new Argument(1,
 				"<id> Enter the scope of a device (id can be partial)") {
 
@@ -375,6 +396,7 @@ public class VoladroidMain {
 	}
 
 	public void start() {
+		new Thread(inspector).start();
 		stack.push(root);
 		while (true) {
 			String[] cmd = in(">> ").split("\\s+");

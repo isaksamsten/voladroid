@@ -67,18 +67,12 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 			@Override
 			public void currentProject(Project p) {
 				getShell().setText(p.getName());
-				// for(Dump d : p.getDumps()) {
-				// combo1.add(d.getName());
-				// }
 
 			}
 
 			@Override
 			public void projectChange(Project p) {
 				getShell().setText(p.getName());
-				// for(Dump d : p.getDumps()) {
-				// combo1.add(d.getName());
-				// }
 			}
 		});
 	}
@@ -181,6 +175,7 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 
 	private void projectFileMenuItemWidgetSelected(SelectionEvent evt) {
 		ProjectDialog d = new ProjectDialog(getShell(), SWT.NONE);
-		d.open();
+		Project p = d.open();
+		classBrowser1.setProject(p);
 	}
 }
