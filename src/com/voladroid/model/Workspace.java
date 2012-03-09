@@ -85,9 +85,7 @@ public class Workspace implements Iterable<Project> {
 
 				fireProjectAdded(project);
 
-				List<Object> l = getConfig().getList("projects");
-				l.add(project.getName());
-				getConfig().setProperty("projects", l);
+				createConfigEntry(project);
 
 				return project;
 			} catch (IOException e) {
@@ -98,10 +96,35 @@ public class Workspace implements Iterable<Project> {
 		}
 	}
 
+	/**
+	 * @param project
+	 */
+	protected void createConfigEntry(Project project) {
+		List<Object> l = getConfig().getList("projects");
+		l.add(project.getName());
+		getConfig().setProperty("projects", l);
+	}
+
+	protected void removeConfigEntry(Project project) {
+		List<Object> l = getConfig().getList("projects");
+		l.remove(project.getName());
+		getConfig().setProperty("projects", l);
+	}
+
 	public void removeProject(String name) {
 		Project project = getProject(name);
+		removeProject(project);
+	}
+
+	public void removeFuzzyProject(String name) {
+		Project project = getFuzzyProject(name);
+		removeProject(project);
+	}
+
+	public void removeProject(Project project) {
 		if (project != null) {
 			projects.remove(project);
+			removeConfigEntry(project);
 			try {
 				FileUtils.forceDelete(project.getLocation());
 				fireProjectRemove(project);
@@ -131,6 +154,13 @@ public class Workspace implements Iterable<Project> {
 	public Project getProject(String name) {
 		for (Project p : projects)
 			if (p.getName().equals(name))
+				return p;
+		return null;
+	}
+
+	public Project getFuzzyProject(String name) {
+		for (Project p : projects)
+			if (p.getName().matches(name + ".*"))
 				return p;
 		return null;
 	}

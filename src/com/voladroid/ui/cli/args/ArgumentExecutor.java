@@ -8,6 +8,9 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.voladroid.service.Services;
+import com.voladroid.ui.cli.VoladroidMain;
+
 public class ArgumentExecutor {
 
 	private ArgumentExecutor parent = null;
@@ -15,6 +18,7 @@ public class ArgumentExecutor {
 	private Map<String, Object> data = new HashMap<String, Object>();
 
 	private String name;
+	private VoladroidMain app;
 
 	/**
 	 * Sub executor
@@ -24,13 +28,16 @@ public class ArgumentExecutor {
 	public ArgumentExecutor(String name, ArgumentExecutor parent) {
 		this.name = name;
 		this.parent = parent;
+		if (parent != null)
+			this.app = parent.app;
 	}
 
 	/**
 	 * Root
 	 */
-	public ArgumentExecutor(String name) {
-		this(name, null);
+	public ArgumentExecutor(String name, VoladroidMain app) {
+		this(name, (ArgumentExecutor) null);
+		this.app = app;
 	}
 
 	public void add(String key, IArgument argument) {
@@ -69,6 +76,7 @@ public class ArgumentExecutor {
 
 	public void alias(String o, String n) {
 		IArgument old = args.get(o);
+		// old.alias(true);
 		args.put(n, old);
 	}
 
@@ -82,9 +90,11 @@ public class ArgumentExecutor {
 				max = s.length();
 		}
 		for (Map.Entry<String, IArgument> kv : args.entrySet()) {
-			b.append(kv.getKey()
-					+ StringUtils.leftPad("", max - kv.getKey().length() + 4)
-					+ kv.getValue().usage() + "\n");
+			if (!kv.getValue().alias()) {
+				b.append(kv.getKey()
+						+ StringUtils.leftPad("", max - kv.getKey().length()
+								+ 4) + kv.getValue().usage() + "\n");
+			}
 		}
 
 		if (parent != null)
@@ -104,6 +114,26 @@ public class ArgumentExecutor {
 		}
 
 		return d;
+	}
+
+	public String in(String msg) {
+		return app.in(msg);
+	}
+
+	public void error(Exception e) {
+		app.error(e);
+	}
+
+	public void error(String msg, Object... args) {
+		app.error(msg, args);
+	}
+
+	public void out(String msg, Object... args) {
+		app.out(msg, args);
+	}
+
+	public void out(Object o) {
+		app.out(o);
 	}
 
 	@SuppressWarnings("unchecked")

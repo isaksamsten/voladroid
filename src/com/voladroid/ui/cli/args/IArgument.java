@@ -12,4 +12,8 @@ public interface IArgument {
 	public void parent(ArgumentExecutor argumentExecutor);
 
 	public ArgumentExecutor parent();
+
+	public void alias(boolean b);
+
+	public boolean alias();
 }

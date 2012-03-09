@@ -114,4 +114,9 @@ public class Device {
 		device.runEventLogService(arg0);
 	}
 
+	@Override
+	public String toString() {
+		return getSerialNumber();
+	}
+
 }
