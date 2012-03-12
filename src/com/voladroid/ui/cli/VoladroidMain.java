@@ -122,10 +122,12 @@ public class VoladroidMain {
 			public ArgumentExecutor execute(ArgumentExecutor self,
 					List<String> args) throws Exception {
 				Config config = self.getConfigurable().getConfig();
-				if (args.size() > 1) {
-					// set
-				} else if (args.size() > 0) {
-					// get
+				if (args.size() == 2) {
+					String key = args.get(0);
+					String value = args.get(1);
+					config.setProperty(key, value);
+				} else if (args.size() == 1) {
+					out(config.getProperty(args.get(0)));
 				} else {
 					Iterator<Object> iter = config.getKeys();
 					while (iter.hasNext()) {

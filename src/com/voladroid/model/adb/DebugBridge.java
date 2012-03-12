@@ -17,6 +17,7 @@ import com.android.ddmlib.ClientData;
 import com.android.ddmlib.ClientData.IHprofDumpHandler;
 import com.android.ddmlib.ClientData.IMethodProfilingHandler;
 import com.android.ddmlib.IDevice;
+import com.voladroid.model.Configs;
 import com.voladroid.model.Workspace;
 import com.voladroid.service.Services;
 
@@ -116,7 +117,7 @@ public class DebugBridge implements IDebugBridge {
 
 					@Override
 					public void configurationChanged(ConfigurationEvent e) {
-						if (e.getPropertyName().equals("adb-path")) {
+						if (e.getPropertyName().equals(Configs.ADB_PATH)) {
 							terminate();
 							adbpath = e.getPropertyValue().toString();
 							init(true);
@@ -127,9 +128,13 @@ public class DebugBridge implements IDebugBridge {
 
 	@Override
 	public void init(boolean b) {
-		AndroidDebugBridge.init(b);
-		adb = AndroidDebugBridge.createBridge(adbpath, b);
-		initialized = true;
+		try {
+			AndroidDebugBridge.init(b);
+			adb = AndroidDebugBridge.createBridge(adbpath, b);
+			initialized = true;
+		} catch (Exception e) {
+			//
+		}
 	}
 
 	@Override
@@ -191,6 +196,7 @@ public class DebugBridge implements IDebugBridge {
 	@Override
 	public void terminate() {
 		AndroidDebugBridge.terminate();
+		initialized = false;
 	}
 
 	@Override

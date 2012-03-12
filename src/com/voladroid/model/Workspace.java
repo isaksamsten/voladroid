@@ -51,12 +51,12 @@ public class Workspace implements Iterable<Project>, Configurable {
 		try {
 			config = new Config(
 					FileUtils.getFile(location, Config.DEFAULT_FILE));
-			if (!config.containsKey("adb-path")) {
-				config.addProperty("adb-path",
+			if (!config.containsKey(Configs.ADB_PATH)) {
+				config.addProperty(Configs.ADB_PATH,
 						"/home/isak/bin/android-sdk-linux/platform-tools/adb");
 			}
-			if (!config.containsKey("hprof-conv-path")) {
-				config.addProperty("hprof-conv-path",
+			if (!config.containsKey(Configs.HPROF_CONF_PATH)) {
+				config.addProperty(Configs.HPROF_CONF_PATH,
 						"/home/isak/bin/android-sdk-linux/tools/hprof-conv");
 			}
 		} catch (ConfigurationException e) {

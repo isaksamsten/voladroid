@@ -13,11 +13,6 @@ import com.voladroid.model.adb.Process;
 
 public class Project implements Configurable {
 
-	public static final String DUMP_LOCATION = "memory";
-
-	public static final String DUMP_LOCATION_KEY = "dump-location";
-	public static final String DUMPS_KEY = "dumps";
-
 	private String name;
 
 	private Config config;
@@ -44,7 +39,7 @@ public class Project implements Configurable {
 
 	public List<Dump> getDumps() {
 		List<Dump> dumps = new LinkedList<Dump>();
-		for (Object name : getConfig().getList(DUMPS_KEY)) {
+		for (Object name : getConfig().getList(Configs.DUMPS_KEY)) {
 			dumps.add(new Dump(this, (String) name));
 		}
 
@@ -85,9 +80,9 @@ public class Project implements Configurable {
 	}
 
 	public File getDumpLocation() {
-		String dump = DUMP_LOCATION;
-		if (getConfig().containsKey(DUMP_LOCATION_KEY)) {
-			dump = getConfig().getString(DUMP_LOCATION_KEY);
+		String dump = Configs.DUMP_LOCATION;
+		if (getConfig().containsKey(Configs.DUMP_LOCATION_KEY)) {
+			dump = getConfig().getString(Configs.DUMP_LOCATION_KEY);
 		}
 
 		File location = FileUtils.getFile(getLocation(), dump);
@@ -106,7 +101,9 @@ public class Project implements Configurable {
 		return workspace;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.voladroid.model.Configurable#getConfig()
 	 */
 	@Override
