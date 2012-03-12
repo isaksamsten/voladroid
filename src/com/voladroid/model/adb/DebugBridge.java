@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
+
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.AndroidDebugBridge.IClientChangeListener;
 import com.android.ddmlib.AndroidDebugBridge.IDeviceChangeListener;
@@ -14,10 +17,11 @@ import com.android.ddmlib.ClientData;
 import com.android.ddmlib.ClientData.IHprofDumpHandler;
 import com.android.ddmlib.ClientData.IMethodProfilingHandler;
 import com.android.ddmlib.IDevice;
+import com.voladroid.model.Workspace;
 import com.voladroid.service.Services;
 
 public class DebugBridge implements IDebugBridge {
-	private static String adbpath = Services.getConfig().getAdbPath();
+	private String adbpath = Services.getConfig().getAdbPath();
 	private static IDebugBridge instance;
 
 	public static IDebugBridge getInstance() {
@@ -106,6 +110,19 @@ public class DebugBridge implements IDebugBridge {
 
 			}
 		});
+
+		Workspace.getWorkspace().getConfig()
+				.addConfigurationListener(new ConfigurationListener() {
+
+					@Override
+					public void configurationChanged(ConfigurationEvent e) {
+						if (e.getPropertyName().equals("adb-path")) {
+							terminate();
+							adbpath = e.getPropertyValue().toString();
+							init(true);
+						}
+					}
+				});
 	}
 
 	@Override

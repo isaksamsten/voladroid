@@ -7,6 +7,7 @@ import java.util.Scanner;
 import org.eclipse.mat.util.VoidProgressListener;
 import org.eclipse.swt.widgets.Display;
 
+import com.voladroid.model.Config;
 import com.voladroid.model.Dump;
 import com.voladroid.model.Project;
 import com.voladroid.model.Workspace;
@@ -37,7 +38,8 @@ public class VoladroidMain {
 		root.put("workspace", Workspace.getWorkspace());
 		root.add("help", new Argument(0, "Show this information") {
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
 				System.out.println(stack.local().usage());
 				return null;
 			}
@@ -46,7 +48,8 @@ public class VoladroidMain {
 		root.add("exit", new Argument(0, "Exit the current scope") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
 				ArgumentExecutor e = stack.pop();
 				System.out.println("Leaving '" + e.name() + "'");
 				return null;
@@ -56,7 +59,8 @@ public class VoladroidMain {
 		root.add("stack", new Argument(0, "Show the stack (* = current)") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
 				System.out.println(stack.local().name() + "*");
 				Iterator<ArgumentExecutor> it = stack.listIterator(1);
 				while (it.hasNext()) {
@@ -70,7 +74,8 @@ public class VoladroidMain {
 				"<true|false> Enable/Disable debugging (current context)") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
 				if (args.size() > 0) {
 					stack.local().put("debug",
 							Boolean.parseBoolean(args.get(0)));
@@ -89,7 +94,8 @@ public class VoladroidMain {
 		root.add("where", new Argument(0, "Show your current location") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
 				System.out.println(stack.local());
 				return null;
 			}
@@ -99,18 +105,43 @@ public class VoladroidMain {
 				"<path> Enter workspace (<path> is optional)") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
-				Workspace space = get("workspace");
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
+				Workspace space = self.get("workspace");
 				out("Enter workspace: '%s'", space.getLocation());
 				return workspace;
 			}
 
 		});
 
+		root.add("config", new Argument(-1,
+				"<name> <value> Set/Get configuration "
+						+ "options (<name> <value> is optional)") {
+
+			@Override
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
+				Config config = self.getConfigurable().getConfig();
+				if (args.size() > 1) {
+					// set
+				} else if (args.size() > 0) {
+					// get
+				} else {
+					Iterator<Object> iter = config.getKeys();
+					while (iter.hasNext()) {
+						Object key = iter.next();
+						out("%s: %s", key, config.getProperty(key.toString()));
+					}
+				}
+				return null;
+			}
+		});
+
 		root.add("exit!", new Argument(0, "Quit the application") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
 				stack.clear();
 				return null;
 			}
@@ -122,12 +153,13 @@ public class VoladroidMain {
 
 	private ArgumentExecutor workspace = new ArgumentExecutor("Workspace", root);
 	{
-
+		workspace.setConfigurableKey("workspace");
 		workspace.add("create", new Argument(1, "<name> Create a new project") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
-				Workspace space = get("workspace");
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
+				Workspace space = self.get("workspace");
 				space.createProject(args.get(0));
 				return null;
 			}
@@ -136,8 +168,9 @@ public class VoladroidMain {
 		workspace.add("remove", new Argument(1, "<name> Remove a project") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
-				Workspace space = get("workspace");
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
+				Workspace space = self.get("workspace");
 				space.removeFuzzyProject(args.get(0));
 				return null;
 			}
@@ -146,8 +179,9 @@ public class VoladroidMain {
 		workspace.add("projects", new Argument(0, "List projects") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
-				Workspace space = get("workspace");
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
+				Workspace space = self.get("workspace");
 				for (Project p : space.getProjects()) {
 					String name = p.getName();
 					if (space.getCurrentProject() != null
@@ -166,9 +200,10 @@ public class VoladroidMain {
 				"Select a project as the current project") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
 				String name = args.get(0);
-				Workspace space = get("workspace");
+				Workspace space = self.get("workspace");
 				Project p = space.getProject(name);
 				if (p != null) {
 					space.setCurrentProject(p);
@@ -183,8 +218,9 @@ public class VoladroidMain {
 				"<name> Enter project (<name> optional)") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
-				Workspace space = get("workspace");
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
+				Workspace space = self.get("workspace");
 				Project p = null;
 				String name = "";
 				if (args.isEmpty()) {
@@ -214,11 +250,13 @@ public class VoladroidMain {
 	private ArgumentExecutor project = new ArgumentExecutor("Project",
 			workspace);
 	{
+		project.setConfigurableKey("project");
 		project.add("devices", new Argument(0,
 				"List availible android devices     ") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
 				IDebugBridge bridge = DebugBridge.getInstance();
 				for (Device d : bridge.getDevices()) {
 					System.out.println(d.getSerialNumber());
@@ -231,8 +269,9 @@ public class VoladroidMain {
 				"Inspect a project in the class browser") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
-				final Project p = get("project");
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
+				final Project p = self.get("project");
 				Display.getDefault().asyncExec(new Runnable() {
 
 					@Override
@@ -249,7 +288,8 @@ public class VoladroidMain {
 				"<id> Enter the scope of a device (id can be partial)") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
 				String name = args.get(0);
 				Device tmp = null;
 				for (Device d : DebugBridge.getInstance().getDevices()) {
@@ -273,8 +313,9 @@ public class VoladroidMain {
 				"<object|byte> Compare the memory images") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
-				Project p = get("project");
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
+				Project p = self.get("project");
 				List<Dump> dumps = p.getDumps();
 				String cmp = "object";
 
@@ -308,8 +349,9 @@ public class VoladroidMain {
 		project.add("info", new Argument(0, "Show information about project") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
-				Project p = get("project");
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
+				Project p = self.get("project");
 				System.out.println(p);
 				return null;
 			}
@@ -318,8 +360,9 @@ public class VoladroidMain {
 		project.add("images", new Argument(0, "List the memory images") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
-				Project p = get("project");
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
+				Project p = self.get("project");
 				int i = 0;
 				for (Dump d : p.getDumps()) {
 					System.out.println(i++ + " " + d.getName());
@@ -336,12 +379,14 @@ public class VoladroidMain {
 
 	private ArgumentExecutor device = new ArgumentExecutor("Device", project);
 	{
+		// device.setConfigKey("device");
 
 		device.add("process", new Argument(0, "List running process") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
-				Device dev = get("device");
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
+				Device dev = self.get("device");
 				List<Process> process = dev.getProcesses();
 				out("pid\t\tname\n--------------------------------");
 				for (Process p : process) {
@@ -355,8 +400,9 @@ public class VoladroidMain {
 		device.add("info", new Argument(0, "Show information about device") {
 
 			@Override
-			public ArgumentExecutor execute(List<String> args) throws Exception {
-				Device dev = get("device");
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
+				Device dev = self.get("device");
 				out("Id: %s", dev.getSerialNumber());
 				out("Emulator: %s", dev.isEmulator() ? "yes" : "no");
 				return null;

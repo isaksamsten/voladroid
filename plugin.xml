@@ -48,10 +48,22 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="voladroid.console"
-            name="voladroid-cli">
+            name="Voladroid">
          <property
                name="appName"
-               value="voladroid-cli">
+               value="Voladroid">
+         </property>
+      </product>
+   </extension>
+   <extension
+         id="voladroid"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="voladroid.console"
+            name="Voladroid">
+         <property
+               name="appName"
+               value="Voladroid">
          </property>
       </product>
    </extension>

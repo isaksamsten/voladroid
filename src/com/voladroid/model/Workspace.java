@@ -15,7 +15,7 @@ import org.apache.commons.io.FileUtils;
 import com.voladroid.exception.ProjectNotFoundException;
 import com.voladroid.service.ProjectListener;
 
-public class Workspace implements Iterable<Project> {
+public class Workspace implements Iterable<Project>, Configurable {
 	private static Workspace workspace = null;
 	private File location;
 

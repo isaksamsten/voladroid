@@ -10,6 +10,7 @@ import com.voladroid.model.adb.Device;
 import com.voladroid.model.adb.Process;
 
 public class ImageArgument extends Argument {
+	private ArgumentExecutor self = null;
 
 	public ImageArgument() {
 		super(3, "<pid> <repeat> <interval> Create an image of <pid> <repeat> "
@@ -18,26 +19,29 @@ public class ImageArgument extends Argument {
 		DebugBridge.getInstance().add(new DebugBridgeAdapter() {
 			@Override
 			public void hprofDump(Process p, byte[] data) {
-				Project project = parent().get("project");
+				Project project = self.get("project");
 				try {
 					project.save(p, data);
 				} catch (IOException e) {
-					error(e);
+					self.error(e);
 				}
 				System.out.println("Image dumped...");
 			}
 
 			@Override
 			public void hprofDumpFail(Process p, String reason) {
-				error(reason);
+				self.error(reason);
 			}
 		});
 	}
 
 	@Override
-	public ArgumentExecutor execute(List<String> args) throws Exception {
+	public ArgumentExecutor execute(ArgumentExecutor self, List<String> args)
+			throws Exception {
+		this.self = self;
+
 		String pid = args.get(0);
-		Device dev = get("device");
+		Device dev = self.get("device");
 		String name = dev.getProcessName(Integer.parseInt(pid));
 		int repeat = Integer.parseInt(args.get(1));
 		int interval = Integer.parseInt(args.get(2)) * 1000;

@@ -11,7 +11,7 @@ import org.apache.commons.io.FileUtils;
 
 import com.voladroid.model.adb.Process;
 
-public class Project {
+public class Project implements Configurable {
 
 	public static final String DUMP_LOCATION = "memory";
 
@@ -106,6 +106,10 @@ public class Project {
 		return workspace;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.voladroid.model.Configurable#getConfig()
+	 */
+	@Override
 	public Config getConfig() {
 		return config;
 	}

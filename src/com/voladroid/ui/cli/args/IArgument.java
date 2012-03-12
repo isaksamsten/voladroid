@@ -7,11 +7,8 @@ public interface IArgument {
 
 	public String usage();
 
-	public ArgumentExecutor execute(List<String> args) throws Exception;
-
-	public void parent(ArgumentExecutor argumentExecutor);
-
-	public ArgumentExecutor parent();
+	public ArgumentExecutor execute(ArgumentExecutor self, List<String> args)
+			throws Exception;
 
 	public void alias(boolean b);
 

@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.io.FileUtils;
 
 public class Config {
@@ -27,6 +29,14 @@ public class Config {
 		}
 		properties = new PropertiesConfiguration(configFile);
 		properties.setAutoSave(true);
+	}
+
+	public void addConfigurationListener(ConfigurationListener l) {
+		properties.addConfigurationListener(l);
+	}
+
+	public boolean removeConfigurationListener(ConfigurationListener l) {
+		return properties.removeConfigurationListener(l);
 	}
 
 	public void setProperty(String key, Object value) {

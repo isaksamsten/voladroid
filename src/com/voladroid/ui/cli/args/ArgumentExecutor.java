@@ -8,6 +8,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.voladroid.model.Configurable;
 import com.voladroid.service.Services;
 import com.voladroid.ui.cli.VoladroidMain;
 
@@ -16,6 +17,9 @@ public class ArgumentExecutor {
 	private ArgumentExecutor parent = null;
 	private Map<String, IArgument> args = new TreeMap<String, IArgument>();
 	private Map<String, Object> data = new HashMap<String, Object>();
+
+	private Configurable configurable = null;
+	private String configKey = null;
 
 	private String name;
 	private VoladroidMain app;
@@ -28,8 +32,9 @@ public class ArgumentExecutor {
 	public ArgumentExecutor(String name, ArgumentExecutor parent) {
 		this.name = name;
 		this.parent = parent;
-		if (parent != null)
+		if (parent != null) {
 			this.app = parent.app;
+		}
 	}
 
 	/**
@@ -41,7 +46,6 @@ public class ArgumentExecutor {
 	}
 
 	public void add(String key, IArgument argument) {
-		argument.parent(this);
 		this.args.put(key, argument);
 	}
 
@@ -62,7 +66,7 @@ public class ArgumentExecutor {
 					if (arity < 0) {
 						arity = arguments.size() - 1;
 					}
-					return arg.execute(arguments.subList(1, 1 + arity));
+					return arg.execute(this, arguments.subList(1, 1 + arity));
 				} catch (Exception e) {
 					throw new ArgumentException(key + " " + arg.usage(), e);
 				}
@@ -114,6 +118,14 @@ public class ArgumentExecutor {
 		}
 
 		return d;
+	}
+
+	public Configurable getConfigurable() {
+		return get(configKey);
+	}
+
+	public void setConfigurableKey(String key) {
+		this.configKey = key;
 	}
 
 	public String in(String msg) {
