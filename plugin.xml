@@ -43,5 +43,17 @@
          </property>
       </product>
    </extension>
+   <extension
+         id="voladroid_cli_1"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="voladroid.console"
+            name="voladroid-cli">
+         <property
+               name="appName"
+               value="voladroid-cli">
+         </property>
+      </product>
+   </extension>
 
 </plugin>
