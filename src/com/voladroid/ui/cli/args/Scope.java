@@ -21,7 +21,6 @@ public abstract class Scope {
 	private Map<String, IArgument> args = new TreeMap<String, IArgument>();
 	private Map<String, Object> data = new HashMap<String, Object>();
 
-	private String name;
 	private VoladroidCli app;
 
 	/**
@@ -29,8 +28,7 @@ public abstract class Scope {
 	 * 
 	 * @param parent
 	 */
-	public Scope(String name, Scope parent) {
-		this.name = name;
+	public Scope(Scope parent) {
 		this.parent = parent;
 		if (parent != null) {
 			this.app = parent.app;
@@ -40,8 +38,8 @@ public abstract class Scope {
 	/**
 	 * Root
 	 */
-	public Scope(String name, VoladroidCli app) {
-		this(name, (Scope) null);
+	public Scope(VoladroidCli app) {
+		this((Scope) null);
 		this.app = app;
 	}
 
@@ -62,9 +60,7 @@ public abstract class Scope {
 		add(key, arity, key, usage);
 	}
 
-	public String name() {
-		return name;
-	}
+	public abstract String name();
 
 	public Stack stack() {
 		return Stack.getInstance();
@@ -111,7 +107,7 @@ public abstract class Scope {
 
 	public String usage() {
 		StringBuilder b = new StringBuilder();
-		b.append(name);
+		b.append(name());
 		b.append("\n===============\n");
 		int max = 4;
 		for (String s : args.keySet()) {

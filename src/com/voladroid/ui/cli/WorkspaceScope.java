@@ -11,8 +11,8 @@ import com.voladroid.ui.cli.args.Scope;
 
 public class WorkspaceScope extends Scope {
 
-	public WorkspaceScope(String name, Scope parent, Workspace space) {
-		super(name, parent);
+	public WorkspaceScope(Scope parent, Workspace space) {
+		super(parent);
 
 		put("workspace", space);
 		add("create", 1, "<name> Create a new project");
@@ -60,12 +60,16 @@ public class WorkspaceScope extends Scope {
 		}
 
 		if (p != null) {
-			return new ProjectScope("Project", this, p);
+			return new ProjectScope(this, p);
 		} else {
 			out("Could not enter project '%s'\n", name);
 		}
 
 		return null;
+	}
+
+	public Workspace getWorkspace() {
+		return get("workspace");
 	}
 
 	@Override
@@ -76,6 +80,11 @@ public class WorkspaceScope extends Scope {
 	@Override
 	public Configurable getConfigurable() {
 		return get("workspace");
+	}
+
+	@Override
+	public String name() {
+		return String.format("Workspace '%s'", "default");
 	}
 
 }

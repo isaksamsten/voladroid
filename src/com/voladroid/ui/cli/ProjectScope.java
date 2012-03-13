@@ -21,8 +21,8 @@ import com.voladroid.ui.cli.args.Scope;
 
 public class ProjectScope extends Scope {
 
-	public ProjectScope(String name, Scope parent, Project project) {
-		super(name, parent);
+	public ProjectScope(Scope parent, Project project) {
+		super(parent);
 
 		put("project", project);
 		add("devices", 0, "List availible android devices");
@@ -92,7 +92,7 @@ public class ProjectScope extends Scope {
 			out("Device '%s' not found", name);
 			return null;
 		}
-		return new DeviceScope("Device", this, tmp);
+		return new DeviceScope(this, tmp);
 	}
 
 	public void inspect(Scope self, List<String> args) {
@@ -113,6 +113,10 @@ public class ProjectScope extends Scope {
 		}
 	}
 
+	public Project getProject() {
+		return get("project");
+	}
+
 	@Override
 	public Configurable getConfigurable() {
 		// TODO Auto-generated method stub
@@ -123,6 +127,11 @@ public class ProjectScope extends Scope {
 	public List<Completion> getCompleters() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String name() {
+		return String.format("Project '%s'", getProject().getName());
 	}
 
 }

@@ -17,7 +17,7 @@ public class VoladroidCli {
 	private ProjectInspector inspector = new ProjectInspector();
 	private Console console = null;
 
-	private Scope root = new RootScope("Root", this);
+	private Scope root = new RootScope(this);
 
 	public VoladroidCli() throws IOException {
 		 console = new Console();
@@ -69,9 +69,9 @@ public class VoladroidCli {
 		while (true) {
 			try {
 				String[] cmd = in(">> ").split("\\s+");
-
 				Scope executor = stack.local().execute(cmd);
 				if (executor != null) {
+					out("Entering %s", executor.name());
 					push(executor);
 				} else if (stack.empty()) {
 					break;

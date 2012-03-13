@@ -17,12 +17,13 @@ public class RootScope extends Scope {
 
 		@Override
 		public List<String> complete(String m, int arg1) {
-			return CompletionUtils.matches(keys(), m + ".*");
+			List<String> strs = CompletionUtils.matches(keys(), m + ".*");
+			return strs;
 		}
 	};
 
-	public RootScope(String name, VoladroidCli app) {
-		super("Root", app);
+	public RootScope(VoladroidCli app) {
+		super(app);
 		init();
 	}
 
@@ -49,13 +50,12 @@ public class RootScope extends Scope {
 
 	public Scope enter(Scope self, List<String> args) {
 		Workspace space = Workspace.getWorkspace();
-		out("Enter workspace: '%s'", space.getLocation());
-		return new WorkspaceScope("Workspace", RootScope.this, space);
+		return new WorkspaceScope(RootScope.this, space);
 	}
 
 	public void exit(Scope self, List<String> args) {
 		Scope e = stack().pop();
-		out("Leaving '" + e.name() + "'");
+		out("Leaving %s", e.name());
 	}
 
 	public void stack(Scope self, List<String> args) {
@@ -111,6 +111,11 @@ public class RootScope extends Scope {
 	@Override
 	public Configurable getConfigurable() {
 		return Workspace.getWorkspace();
+	}
+
+	@Override
+	public String name() {
+		return "Voladroid";
 	}
 
 }

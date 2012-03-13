@@ -12,11 +12,9 @@ import com.voladroid.ui.cli.args.ImageArgument;
 
 public class DeviceScope extends Scope {
 
-	private Device device;
-
-	public DeviceScope(String name, Scope parent, Device device) {
-		super(name, parent);
-		this.device = device;
+	public DeviceScope(Scope parent, Device device) {
+		super(parent);
+		put("device", device);
 
 		add("process", 0, "List running process");
 		add("info", 0, "Show information about device");
@@ -24,6 +22,7 @@ public class DeviceScope extends Scope {
 	}
 
 	public void process(Scope self, List<String> args) {
+		Device device = self.get("device");
 		List<Process> process = device.getProcesses();
 		out("pid\t\tname\n--------------------------------");
 		for (Process p : process) {
@@ -32,6 +31,7 @@ public class DeviceScope extends Scope {
 	}
 
 	public void info(Scope self, List<String> args) {
+		Device device = self.get("device");
 		out("Id: %s", device.getSerialNumber());
 		out("Emulator: %s", device.isEmulator() ? "yes" : "no");
 	}
@@ -46,6 +46,15 @@ public class DeviceScope extends Scope {
 	public List<Completion> getCompleters() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public Device getDevice() {
+		return get("device");
+	}
+
+	@Override
+	public String name() {
+		return String.format("Device '%s'", getDevice().getSerialNumber());
 	}
 
 }
