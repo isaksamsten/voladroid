@@ -6,6 +6,8 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+import com.android.ddmlib.Log.ILogOutput;
+import com.android.ddmlib.Log.LogLevel;
 import com.voladroid.model.Project;
 import com.voladroid.model.Workspace;
 import com.voladroid.model.adb.DebugBridge;

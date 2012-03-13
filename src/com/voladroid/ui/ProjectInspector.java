@@ -8,6 +8,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -22,6 +23,16 @@ public class ProjectInspector implements Runnable {
 	public void open(Project project) {
 		final Shell shell = new Shell(Display.getDefault());
 		ClassBrowser inst = new ClassBrowser(shell, project, SWT.NULL);
+		open(shell, inst);
+	}
+
+	public void open() {
+		final Shell shell = new Shell(Display.getDefault());
+		VoladroidGui gui = new VoladroidGui(shell, SWT.NONE);
+		open(shell, gui);
+	}
+
+	public void open(final Shell shell, Composite inst) {
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
 		shell.layout();

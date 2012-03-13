@@ -10,7 +10,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.voladroid.model.Configurable;
 import com.voladroid.service.Services;
-import com.voladroid.ui.cli.VoladroidMain;
+import com.voladroid.ui.cli.VoladroidCli;
 
 public class ArgumentExecutor {
 
@@ -22,7 +22,7 @@ public class ArgumentExecutor {
 	private String configKey = null;
 
 	private String name;
-	private VoladroidMain app;
+	private VoladroidCli app;
 
 	/**
 	 * Sub executor
@@ -40,7 +40,7 @@ public class ArgumentExecutor {
 	/**
 	 * Root
 	 */
-	public ArgumentExecutor(String name, VoladroidMain app) {
+	public ArgumentExecutor(String name, VoladroidCli app) {
 		this(name, (ArgumentExecutor) null);
 		this.app = app;
 	}

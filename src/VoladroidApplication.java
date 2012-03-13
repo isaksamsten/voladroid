@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import com.voladroid.model.adb.DebugBridge;
-import com.voladroid.ui.VoladroidMain;
+import com.voladroid.ui.VoladroidGui;
 
 /**
  * This class controls all aspects of the application's execution
@@ -27,7 +27,7 @@ public class VoladroidApplication implements IApplication {
 
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
-		VoladroidMain inst = new VoladroidMain(shell, SWT.NULL);
+		VoladroidGui inst = new VoladroidGui(shell, SWT.NULL);
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
 		shell.layout();

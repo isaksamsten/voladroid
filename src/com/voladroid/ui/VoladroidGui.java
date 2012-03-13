@@ -24,7 +24,7 @@ import com.voladroid.service.ProjectListener;
  * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
  * ANY CORPORATE OR COMMERCIAL PURPOSE.
  */
-public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
+public class VoladroidGui extends org.eclipse.swt.widgets.Composite {
 
 	private Menu menu1;
 	private MenuItem aboutMenuItem;
@@ -46,7 +46,7 @@ public class VoladroidMain extends org.eclipse.swt.widgets.Composite {
 		SWTResourceManager.registerResourceUser(this);
 	}
 
-	public VoladroidMain(Composite parent, int style) {
+	public VoladroidGui(Composite parent, int style) {
 		super(parent, style);
 		initGUI();
 

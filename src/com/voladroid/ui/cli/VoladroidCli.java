@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.eclipse.mat.util.VoidProgressListener;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import com.voladroid.model.Config;
 import com.voladroid.model.Dump;
@@ -22,12 +24,13 @@ import com.voladroid.model.compare.Result;
 import com.voladroid.model.compare.ResultProducer;
 import com.voladroid.service.Services;
 import com.voladroid.ui.ProjectInspector;
+import com.voladroid.ui.VoladroidGui;
 import com.voladroid.ui.cli.args.Argument;
 import com.voladroid.ui.cli.args.ArgumentExecutor;
 import com.voladroid.ui.cli.args.ArgumentStack;
 import com.voladroid.ui.cli.args.ImageArgument;
 
-public class VoladroidMain {
+public class VoladroidCli {
 
 	private ArgumentStack stack = ArgumentStack.getInstance();
 	private Scanner in = new Scanner(System.in);
@@ -145,6 +148,16 @@ public class VoladroidMain {
 			public ArgumentExecutor execute(ArgumentExecutor self,
 					List<String> args) throws Exception {
 				stack.clear();
+				return null;
+			}
+		});
+
+		root.add("gui", new Argument(0, "Show the graphical user interface") {
+
+			@Override
+			public ArgumentExecutor execute(ArgumentExecutor self,
+					List<String> args) throws Exception {
+				inspector.open();
 				return null;
 			}
 		});
