@@ -10,7 +10,7 @@ import com.voladroid.model.adb.Device;
 import com.voladroid.model.adb.Process;
 
 public class ImageArgument extends Argument {
-	private ArgumentExecutor self = null;
+	private Scope self = null;
 
 	public ImageArgument() {
 		super(3, "<pid> <repeat> <interval> Create an image of <pid> <repeat> "
@@ -36,7 +36,7 @@ public class ImageArgument extends Argument {
 	}
 
 	@Override
-	public ArgumentExecutor execute(ArgumentExecutor self, List<String> args)
+	public Scope execute(Scope self, List<String> args)
 			throws Exception {
 		this.self = self;
 

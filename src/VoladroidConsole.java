@@ -1,5 +1,6 @@
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.jboss.jreadline.console.settings.Settings;
 
 import com.android.ddmlib.Log.ILogOutput;
 import com.android.ddmlib.Log.LogLevel;
@@ -9,6 +10,7 @@ import com.voladroid.ui.cli.VoladroidCli;
 public class VoladroidConsole implements IApplication {
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
+		Settings.getInstance().setReadInputrc(false);
 		com.android.ddmlib.Log.setLogOutput(new ILogOutput() {
 
 			@Override

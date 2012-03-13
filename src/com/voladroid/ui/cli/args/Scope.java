@@ -1,25 +1,25 @@
 package com.voladroid.ui.cli.args;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.jboss.jreadline.complete.Completion;
 
 import com.voladroid.model.Configurable;
-import com.voladroid.service.Services;
 import com.voladroid.ui.cli.VoladroidCli;
 
-public class ArgumentExecutor {
+public abstract class Scope {
 
-	private ArgumentExecutor parent = null;
+	private Scope parent = null;
 	private Map<String, IArgument> args = new TreeMap<String, IArgument>();
 	private Map<String, Object> data = new HashMap<String, Object>();
-
-	private Configurable configurable = null;
-	private String configKey = null;
 
 	private String name;
 	private VoladroidCli app;
@@ -29,7 +29,7 @@ public class ArgumentExecutor {
 	 * 
 	 * @param parent
 	 */
-	public ArgumentExecutor(String name, ArgumentExecutor parent) {
+	public Scope(String name, Scope parent) {
 		this.name = name;
 		this.parent = parent;
 		if (parent != null) {
@@ -40,24 +40,50 @@ public class ArgumentExecutor {
 	/**
 	 * Root
 	 */
-	public ArgumentExecutor(String name, VoladroidCli app) {
-		this(name, (ArgumentExecutor) null);
+	public Scope(String name, VoladroidCli app) {
+		this(name, (Scope) null);
 		this.app = app;
+	}
+
+	public Set<String> keys() {
+		return args.keySet();
 	}
 
 	public void add(String key, IArgument argument) {
 		this.args.put(key, argument);
 	}
 
+	public void add(String key, int arity, String name, String usage) {
+		this.args.put(key, new MethodArgument(arity, usage, getMethod(name),
+				this));
+	}
+
+	public void add(String key, int arity, String usage) {
+		add(key, arity, key, usage);
+	}
+
 	public String name() {
 		return name;
 	}
 
-	public ArgumentExecutor execute(String[] a) throws Exception {
+	public Stack stack() {
+		return Stack.getInstance();
+	}
+
+	public Method getMethod(String name) {
+		try {
+			return getClass().getMethod(name, Scope.class, List.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public Scope execute(String[] a) throws Exception {
 		List<String> arguments = Arrays.asList(a);
 		String key = arguments.get(0);
 
-		ArgumentExecutor current = this;
+		Scope current = this;
 		while (current != null) {
 			IArgument arg = current.args.get(key);
 			if (arg != null) {
@@ -68,19 +94,18 @@ public class ArgumentExecutor {
 					}
 					return arg.execute(this, arguments.subList(1, 1 + arity));
 				} catch (Exception e) {
-					throw new ArgumentException(key + " " + arg.usage(), e);
+					throw new ScopeException(key + " " + arg.usage(), e);
 				}
 			}
 
 			current = current.parent;
 		}
-		throw new ArgumentException("Command not found '" + key + "'");
+		throw new ScopeException("Command not found '" + key + "'");
 
 	}
 
 	public void alias(String o, String n) {
 		IArgument old = args.get(o);
-		// old.alias(true);
 		args.put(n, old);
 	}
 
@@ -94,11 +119,11 @@ public class ArgumentExecutor {
 				max = s.length();
 		}
 		for (Map.Entry<String, IArgument> kv : args.entrySet()) {
-			if (!kv.getValue().alias()) {
+			if (kv.getValue() != null)
 				b.append(kv.getKey()
 						+ StringUtils.leftPad("", max - kv.getKey().length()
 								+ 4) + kv.getValue().usage() + "\n");
-			}
+
 		}
 
 		if (parent != null)
@@ -120,15 +145,11 @@ public class ArgumentExecutor {
 		return d;
 	}
 
-	public Configurable getConfigurable() {
-		return get(configKey);
-	}
+	public abstract Configurable getConfigurable();
 
-	public void setConfigurableKey(String key) {
-		this.configKey = key;
-	}
+	public abstract List<Completion> getCompleters();
 
-	public String in(String msg) {
+	public String in(String msg) throws IOException {
 		return app.in(msg);
 	}
 
@@ -146,6 +167,10 @@ public class ArgumentExecutor {
 
 	public void out(Object o) {
 		app.out(o);
+	}
+
+	public VoladroidCli app() {
+		return app;
 	}
 
 	@SuppressWarnings("unchecked")

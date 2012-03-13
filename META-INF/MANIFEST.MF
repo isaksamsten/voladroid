@@ -10,7 +10,8 @@ Bundle-ClassPath: .,
  lib/commons-configuration-1.7.jar,
  lib/commons-lang-2.6.jar,
  lib/commons-collections-3.2.1.jar,
- lib/commons-logging-1.1.1.jar
+ lib/commons-logging-1.1.1.jar,
+ lib/jreadline.jar
 Bundle-Activator: voladroid.Activator
 Export-Package: voladroid
 Require-Bundle: org.eclipse.mat.api;bundle-version="1.1.1",

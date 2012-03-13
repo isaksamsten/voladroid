@@ -7,7 +7,7 @@ public interface IArgument {
 
 	public String usage();
 
-	public ArgumentExecutor execute(ArgumentExecutor self, List<String> args)
+	public Scope execute(Scope self, List<String> args)
 			throws Exception;
 
 	public void alias(boolean b);

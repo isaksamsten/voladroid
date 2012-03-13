@@ -3,7 +3,6 @@ package com.voladroid.ui.cli.args;
 public abstract class Argument implements IArgument {
 	private int arity;
 	private String usage;
-	private ArgumentExecutor parent;
 	private boolean alias;
 
 	public Argument(int arity, String usage) {
