@@ -20,7 +20,7 @@ public class VoladroidCli {
 	private Scope root = new RootScope(this);
 
 	public VoladroidCli() throws IOException {
-		 console = new Console();
+//		 console = new Console();
 	}
 
 	public ProjectInspector inspector() {

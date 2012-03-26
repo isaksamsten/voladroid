@@ -50,7 +50,7 @@ public class ObjectResultProducer implements ResultProducer {
 	}
 
 	private double totalAvrage(List<Histogram> histograms) {
-		long total = 0;
+		double total = 0;
 		for (Histogram g : histograms) {
 			total += g.getNumberOfObjects();
 		}
@@ -73,8 +73,8 @@ public class ObjectResultProducer implements ResultProducer {
 		return samples;
 	}
 
-	protected long sampleAvrage(List<Long> samples) {
-		long diffTotal = 0;
+	protected double sampleAvrage(List<Long> samples) {
+		double diffTotal = 0;
 		for (long l : samples) {
 			diffTotal += l;
 		}
