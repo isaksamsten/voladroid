@@ -239,4 +239,9 @@ public class DebugBridge implements IDebugBridge {
 	public boolean restart() {
 		return adb.restart();
 	}
+
+	@Override
+	public void remove(DebugBridgeListener l) {
+		listeners.remove(DebugBridgeListener.class, l);		
+	}
 }

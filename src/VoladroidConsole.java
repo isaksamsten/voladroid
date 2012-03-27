@@ -66,11 +66,7 @@ public class VoladroidConsole implements IApplication {
 			int idx = args.indexOf("-r");
 			String file = args.get(idx + 1);
 			try {
-				Bundle bundle = context.getBrandingBundle();
-				Path path = new Path(file);
-				URL url = FileLocator.find(bundle, path, Collections.EMPTY_MAP);
-				URL fileUrl = FileLocator.toFileURL(url);
-				main = new FileCli(fileUrl.getPath());
+				main = new FileCli(file);
 			} catch (Exception ex) {
 				System.out.format("File not found, %s\n", ex.getMessage());
 				return IApplication.EXIT_OK;

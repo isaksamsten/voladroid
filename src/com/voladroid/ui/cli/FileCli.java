@@ -18,7 +18,9 @@ public class FileCli extends AbstractCli {
 
 	@Override
 	public String in(String msg) throws IOException {
-		return scanner.nextLine();
+		String cmd = scanner.nextLine();
+		out(">> %s", cmd);
+		return cmd;
 	}
 
 	@Override

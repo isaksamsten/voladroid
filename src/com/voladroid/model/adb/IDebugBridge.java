@@ -21,6 +21,8 @@ public interface IDebugBridge {
 	public abstract int getConnectionAttemptCount();
 
 	void add(DebugBridgeListener l);
+	
+	void remove(DebugBridgeListener l);
 
 	boolean isInit();
 }

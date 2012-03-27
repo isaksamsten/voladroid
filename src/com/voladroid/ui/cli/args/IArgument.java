@@ -13,4 +13,9 @@ public interface IArgument {
 	public void alias(boolean b);
 
 	public boolean alias();
+	
+	public void dispose();
+
+	public void initialize();
+	
 }

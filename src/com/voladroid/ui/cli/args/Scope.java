@@ -88,7 +88,11 @@ public abstract class Scope {
 					if (arity < 0) {
 						arity = arguments.size() - 1;
 					}
-					return arg.execute(this, arguments.subList(1, 1 + arity));
+					arg.initialize();
+					Scope ret = arg.execute(this, arguments.subList(1, 1 + arity));
+					arg.dispose();
+					
+					return ret;
 				} catch (Exception e) {
 					throw new ScopeException(key + " " + arg.usage(), e);
 				}
