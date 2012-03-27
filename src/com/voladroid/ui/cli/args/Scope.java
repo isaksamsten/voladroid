@@ -13,7 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jboss.jreadline.complete.Completion;
 
 import com.voladroid.model.Configurable;
-import com.voladroid.ui.cli.VoladroidCli;
+import com.voladroid.ui.cli.AbstractCli;
 
 public abstract class Scope {
 
@@ -21,7 +21,7 @@ public abstract class Scope {
 	private Map<String, IArgument> args = new TreeMap<String, IArgument>();
 	private Map<String, Object> data = new HashMap<String, Object>();
 
-	private VoladroidCli app;
+	private AbstractCli app;
 
 	/**
 	 * Sub executor
@@ -38,7 +38,7 @@ public abstract class Scope {
 	/**
 	 * Root
 	 */
-	public Scope(VoladroidCli app) {
+	public Scope(AbstractCli app) {
 		this((Scope) null);
 		this.app = app;
 	}
@@ -165,7 +165,7 @@ public abstract class Scope {
 		app.out(o);
 	}
 
-	public VoladroidCli app() {
+	public AbstractCli app() {
 		return app;
 	}
 

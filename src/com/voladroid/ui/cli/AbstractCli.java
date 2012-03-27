@@ -10,30 +10,15 @@ import com.voladroid.ui.ProjectInspector;
 import com.voladroid.ui.cli.args.Scope;
 import com.voladroid.ui.cli.args.Stack;
 
-public class VoladroidCli {
+public abstract class AbstractCli implements Cli {
 
 	private Stack stack = Stack.getInstance();
-	private Scanner in = new Scanner(System.in);
 	private ProjectInspector inspector = new ProjectInspector();
-	private Console console = null;
 
 	private Scope root = new RootScope(this);
 
-	public VoladroidCli() throws IOException {
-//		 console = new Console();
-	}
-
 	public ProjectInspector inspector() {
 		return inspector;
-	}
-
-	public String in(String msg) throws IOException {
-		if (console != null) {
-			return console.read(msg);
-		} else {
-			System.out.print("dbg>> ");
-			return in.nextLine();
-		}
 	}
 
 	public void error(Exception e) {
@@ -58,17 +43,41 @@ public class VoladroidCli {
 	}
 
 	public void push(Scope e) {
-		if (e.getCompleters() != null && console != null)
-			console.addCompletions(e.getCompleters());
 		stack.push(e);
 	}
 
-	public void start() {
+	@Override
+	public String[] nextCommand() throws IOException {
+		return in(">> ").split("\\s+");
+	}
+
+	@Override
+	public boolean hasCommand() {
+		return true;
+	}
+
+	@Override
+	public void onStart() {
 		new Thread(inspector).start();
+	}
+
+	@Override
+	public void onStop() {
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.voladroid.ui.cli.Cli#start()
+	 */
+	@Override
+	public void start() {
+		onStart();
 		push(root);
-		while (true) {
+		while (hasCommand()) {
 			try {
-				String[] cmd = in(">> ").split("\\s+");
+				String[] cmd = nextCommand();
 				Scope executor = stack.local().execute(cmd);
 				if (executor != null) {
 					out("Entering %s", executor.name());
@@ -80,6 +89,7 @@ public class VoladroidCli {
 				error(e);
 			}
 		}
+		onStop();
 	}
 
 }

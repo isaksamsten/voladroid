@@ -22,7 +22,7 @@ public class RootScope extends Scope {
 		}
 	};
 
-	public RootScope(VoladroidCli app) {
+	public RootScope(AbstractCli app) {
 		super(app);
 		init();
 	}

@@ -24,7 +24,7 @@ public class Activator implements BundleActivator {
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
-		logger.info("Initialize");
+//		logger.info("Initialize");
 	}
 
 	/*
@@ -35,7 +35,7 @@ public class Activator implements BundleActivator {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		logger.info("Exit");
+//		logger.info("Exit");
 		try {
 			Workspace s = Workspace.getWorkspace();
 			s.getConfig().save();

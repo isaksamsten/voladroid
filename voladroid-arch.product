@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Voladroid" uid="voladroid-cli" id="voladroid.voladroid" application="voladroid.console" version="1.1.1" useFeatures="false" includeLaunchers="true">
+<product name="Voladroid" uid="voladroid-cli" id="voladroid.voladroid" application="voladroid.console" version="1.1.2" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
