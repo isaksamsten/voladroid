@@ -89,9 +89,10 @@ public abstract class Scope {
 						arity = arguments.size() - 1;
 					}
 					arg.initialize();
-					Scope ret = arg.execute(this, arguments.subList(1, 1 + arity));
+					Scope ret = arg.execute(this,
+							arguments.subList(1, 1 + arity));
 					arg.dispose();
-					
+
 					return ret;
 				} catch (Exception e) {
 					throw new ScopeException(key + " " + arg.usage(), e);
@@ -171,6 +172,14 @@ public abstract class Scope {
 
 	public AbstractCli app() {
 		return app;
+	}
+
+	public void onEnter() {
+		out("Entering %s", name());
+	}
+
+	public void onExit() {
+
 	}
 
 	@SuppressWarnings("unchecked")

@@ -80,7 +80,7 @@ public abstract class AbstractCli implements Cli {
 				String[] cmd = nextCommand();
 				Scope executor = stack.local().execute(cmd);
 				if (executor != null) {
-					out("Entering %s", executor.name());
+					executor.onEnter();
 					push(executor);
 				} else if (stack.empty()) {
 					break;

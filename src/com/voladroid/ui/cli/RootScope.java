@@ -55,6 +55,7 @@ public class RootScope extends Scope {
 
 	public void exit(Scope self, List<String> args) {
 		Scope e = stack().pop();
+		e.onExit();
 		out("Leaving %s", e.name());
 	}
 
