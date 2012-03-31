@@ -66,7 +66,7 @@ public class VoladroidConsole implements IApplication {
 			int idx = args.indexOf("-r");
 			String file = args.get(idx + 1);
 			try {
-				main = new FileCli(file);
+				main = new FileCli(file, new File(file));
 			} catch (Exception ex) {
 				System.out.format("File not found, %s\n", ex.getMessage());
 				return IApplication.EXIT_OK;
